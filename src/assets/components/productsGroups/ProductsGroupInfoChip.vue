@@ -1,0 +1,37 @@
+<template>
+  <v-chip
+    class='c-pointer text--white ma-1'
+    color='blue'
+    label
+    @click='show'
+  >
+    {{ name }}
+  </v-chip>
+</template>
+<script>
+import {bus} from '../../app';
+import axios from 'axios';
+import routing from '../../config/routing';
+import events from '../../config/events';
+
+export default {
+    name: 'ProductsGroupInfoChip',
+    props: {
+        id: {
+            type: Number | String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        }
+    },
+    methods: {
+        show: function () {
+            axios.get(routing.productsGroup(this.id)).then(response => bus.$emit(events.productsGroupInfoShow, response.data));
+        }
+    }
+};
+</script>
+<style scoped>
+</style>

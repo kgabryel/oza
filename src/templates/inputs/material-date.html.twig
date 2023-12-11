@@ -1,0 +1,8 @@
+{% block material_date_widget %}
+    <input-date
+        label='{{ label }}'
+        name='{{ full_name }}'
+        value='{{ value }}'
+        errors='{{ errors|errorMessages|json_encode() }}'>
+    </input-date>
+{% endblock %}

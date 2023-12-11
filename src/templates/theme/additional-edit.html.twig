@@ -1,0 +1,31 @@
+<v-container fill-height>
+    <div class='px-3 pb-3 w-100'>
+        <v-layout row wrap align-center>
+            <v-flex>
+                <v-row>
+                    <v-col cols='12' sm='6' md='6'>
+                        <form action='{{ deletePath }}' method='post'>
+                            <input type='hidden' name='_method' value='delete'/>
+                            <v-btn block color='error' elevation='2' large type='submit'>
+                                <v-icon left dark>
+                                    mdi-close
+                                </v-icon>
+                                Usuń
+                            </v-btn>
+                        </form>
+                    </v-col>
+                    <v-col cols='12' sm='6' md='6' class='sm-pt-0'>
+                        <a href='{{ backPath }}' class='text-decoration-none'>
+                            <v-btn block color='secondary' elevation='2' large type='button'>
+                                <v-icon left dark>
+                                    mdi-arrow-left-bold
+                                </v-icon>
+                                Powrót
+                            </v-btn>
+                        </a>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </div>
+</v-container>

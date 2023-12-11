@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang='pl-PL'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    {{ encore_entry_link_tags('app') }}
+    <link href='https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css' rel='stylesheet'>
+    <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
+    <meta name='theme-color' content='#243A51'>
+    <title>{% block title %}OZA{% endblock %}</title>
+</head>
+<body id='body'>
+<div id='app'>
+    <div v-cloak>
+        <div class="v-cloak--placeholder">
+            <div class="loader-container">
+                <div class="loader">Loading...</div>
+            </div>
+        </div>
+        <v-app class="v-cloak--content">
+            {% block body %}{% endblock %}
+        </v-app>
+    </div>
+</div>
+</body>
+{{ encore_entry_script_tags('app') }}
+</html>

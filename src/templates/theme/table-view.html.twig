@@ -1,0 +1,29 @@
+{% extends 'content.html.twig' %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' lg='8' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary'
+                                       dark
+                                       dense
+                                       class='anchor'
+                                       id='{{ tableId }}'
+                                       data-name='{{ tableName }}'>
+                                {{ tableName }}
+                            </v-toolbar>
+                            {% block table_nav %}{% endblock %}
+                            {% block table %}{% endblock %}
+                        </v-card>
+                    </v-col>
+                    <v-col cols='12' lg='4' class='pa-3'>
+                        {% block right_col %}{% endblock %}
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    {% block modals %}{% endblock %}
+{% endblock %}

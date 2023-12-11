@@ -1,0 +1,42 @@
+{
+    "devDependencies": {
+        "@symfony/webpack-encore": "^1.0.0",
+        "core-js": "^3.0.0",
+        "deepmerge": "^4.2.2",
+        "eslint": "^8.42.0",
+        "eslint-plugin-vue": "^9.14.1",
+        "regenerator-runtime": "^0.13.2",
+        "sass": "~1.32",
+        "sass-loader": "^12.1.0",
+        "stimulus": "^2.0.0",
+        "webpack-notifier": "^1.6.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@chenfengyuan/vue-barcode": "1",
+        "@fortawesome/fontawesome-free": "^5.15.3",
+        "axios": "^0.21.1",
+        "chart.js": "^2.9.4",
+        "chartjs-adapter-moment": "^0.1.2",
+        "moment": "^2.29.1",
+        "vue": "^2.6.12",
+        "vue-advanced-cropper": "^1.11.6",
+        "vue-barcode-reader": "0.0.3",
+        "vue-chartjs": "^3.5.1",
+        "vue-clipboard2": "^0.3.3",
+        "vue-loader": "^15.9.6",
+        "vue-notification-bell": "^0.9.8",
+        "vue-template-compiler": "^2.6.12",
+        "vue-toastification": "^1.7.14",
+        "vue2-editor": "^2.10.3",
+        "vuedraggable": "^2.24.3",
+        "vuetify": "^2.5.6"
+    }
+}

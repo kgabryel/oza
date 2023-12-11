@@ -1,0 +1,126 @@
+{% extends 'content.html.twig' %}
+{% set deletePath = path('alerts.destroy', {id: entity.id}) %}
+{% set backPath = path('alerts.index') %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' lg='8' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='preview' data-name='Podgląd'>
+                                Podgląd
+                            </v-toolbar>
+                            <div class='pa-3'>
+                                <alert
+                                    type='{{ entity.type.type }}'
+                                    name='{{ entity.type.name }}'
+                                    description='{{ entity.description }}'>
+                                </alert>
+                            </div>
+                        </v-card>
+                        {% if entity.supplyAlerts|length > 0 %}
+                            <v-card elevation='2' class='mt-3'>
+                                <v-toolbar
+                                    color='primary'
+                                    dark
+                                    dense
+                                    class='anchor'
+                                    id='assigned-supplies'
+                                    data-name='Przypisane zapasy'>
+                                    Przypisane zapasy
+                                </v-toolbar>
+                                <v-simple-table>
+                                    <template v-slot:default>
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                Produkt
+                                            </th>
+                                            <th>
+                                                Od
+                                            </th>
+                                            <th>
+                                                Do
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for supply in alerts %}
+                                            <tr>
+                                                <td>
+                                                    <products-group-info-button
+                                                        id='{{ supply.supply.group.id }}'
+                                                        name='{{ supply.supply.group.name }}'>
+                                                    </products-group-info-button>
+                                                </td>
+                                                <td>
+                                                    {% if loop.index0 > 0 %}
+                                                        {{ alerts[loop.index0 - 1].amount }} {{ alerts[loop.index0 - 1].unit.shortcut }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {{ supply.amount }} {{ supply.supply.group.unit.shortcut }}
+                                                </td>
+                                                <td class='text-right'>
+                                                    <a
+                                                        href='{{ path('supplies.show', {id: supply.supply.id}) }}'
+                                                        class='text-decoration-none'>
+                                                        <v-btn icon type='button'>
+                                                            <v-icon>
+                                                                mdi-pencil
+                                                            </v-icon>
+                                                        </v-btn>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </v-card>
+                        {% endif %}
+                    </v-col>
+                    <v-col cols='12' lg='4' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='edit-alert' data-name='Edycja'>
+                                Edycja
+                            </v-toolbar>
+                            <form
+                                method='post'
+                                action='{{ path('alerts.update', {id: entity.id}) }}'
+                                class='pa-3 pt-0'
+                                {% if autocomplete == false %} autocomplete='off' {% endif %}>
+                                <input type='hidden' name='_method' value='put'/>
+                                {{ form_widget(form.description) }}
+                                <v-row>
+                                    <v-col cols='6'>
+                                        {{ form_widget(form.type) }}
+                                    </v-col>
+                                    <v-col cols='6'>
+                                        {{ form_widget(form.active) }}
+                                    </v-col>
+                                </v-row>
+                                <input type='hidden'
+                                       name='{{ form._token.vars.full_name }}'
+                                       value='{{ form._token.vars.value }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    <v-icon left dark>
+                                        mdi-content-save
+                                    </v-icon>
+                                    Aktualizuj
+                                </v-btn>
+                            </form>
+                            {% embed 'theme/additional-edit.html.twig' %}{% endembed %}
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <products-group-info></products-group-info>
+    <overlay></overlay>
+{% endblock %}

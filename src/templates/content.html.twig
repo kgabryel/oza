@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+ {% if app.session.getFlashBag().has('successMessage') %}
+     {% set successMessage = app.flashes('successMessage') %}
+ {% endif %}
+    {% if app.session.getFlashBag().has('errorMessage') %}
+        {% set errorMessage = app.flashes('errorMessage') %}
+    {% endif %}
+{% block body %}
+    <app username='{{ app.user.name ?? app.user.email }}'
+         menu='{{ menu }}'
+         page='{{ activePage }}'
+         user-id='{{ app.user.id }}'>
+        {% if successMessage is defined %}
+            <info-message text='{{ successMessage|json_encode() }}'></info-message>
+        {% else %}
+            <info-message></info-message>
+        {% endif %}
+        {% if errorMessage is defined %}
+            <error-message text='{{ errorMessage|json_encode() }}'></error-message>
+        {% else %}
+            <error-message></error-message>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </app>
+{% endblock %}

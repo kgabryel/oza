@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Controller\Web;
+
+use App\Entity\Photo;
+use App\Repository\PhotoRepository;
+use App\Utils\PhotoUtils;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+class PhotosController extends AbstractController
+{
+    private KernelInterface $kernel;
+    private PhotoRepository $photoRepository;
+
+    public function __construct(PhotoRepository $photoRepository, KernelInterface $kernel)
+    {
+        $this->photoRepository = $photoRepository;
+        $this->kernel = $kernel;
+    }
+
+    public function show(string $type, int $id): Response
+    {
+        /** @var Photo $photo */
+        $photo = $this->photoRepository->findById($id, $this->getUser());
+        if ($photo === null) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+        $response = new Response();
+        $response->headers->set('Content-Type', $photo->getType());
+        $response->setContent(
+            file_get_contents(PhotoUtils::getPath($this->kernel->getProjectDir(), $type, $photo->getFileName()))
+        );
+        return $response;
+    }
+}

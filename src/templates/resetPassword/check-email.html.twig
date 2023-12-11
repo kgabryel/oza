@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' sm='8' offset-sm='2' lg='4' offset-lg='4'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense>
+                                Reset hasła
+                            </v-toolbar>
+                            <div class='text-center mt-3 pb-2'>
+                                <p class='px-1'>
+                                    Jeżeli istnieje konto powiązane z adresem e-mail to została wysłana wiadomość z
+                                    linkiem umożliwiającym zresetowanie hasła. Link wygaśnie po godzinie.
+                                </p>
+                                <a href='{{ path('login.show') }}' class='text-decoration-none'>
+                                    Powrót
+                                </a>
+                            </div>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+{% endblock %}

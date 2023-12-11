@@ -1,0 +1,21 @@
+<v-card elevation='2'>
+    <v-toolbar color='primary' dark dense class='anchor' id='{{ formId }}' data-name='{{ header }}'>
+        {{ header }}
+    </v-toolbar>
+    <form
+        method='post'
+        action='{% block action %}{% endblock %}'
+        class='pa-3 pt-0'
+        {% if autocomplete == false %} autocomplete='off' {% endif %}>
+        {% block method %}{% endblock %}
+        {{ form_widget(createForm.name) }}
+        <input
+            type='hidden'
+            name='{{ createForm._token.vars.full_name }}'
+            value='{{ createForm._token.vars.value }}'/>
+        <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+            {% block button %}{% endblock %}
+        </v-btn>
+    </form>
+    {% block additional %}{% endblock %}
+</v-card>

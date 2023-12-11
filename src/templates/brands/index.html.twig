@@ -1,0 +1,36 @@
+{% extends 'theme/table-view.html.twig' %}
+{% set header = 'Dodaj markę' %}
+{% set formId = 'new-brand' %}
+{% set action = path('brands.store') %}
+{% block table_nav %}
+    <form
+        method='get'
+        action='{{ path('brands.index') }}' {% if autocomplete == false %} autocomplete='off' {% endif %}>
+        <v-container fill-height grid-list>
+            <v-layout row wrap align-center>
+                <v-flex class='px-5 mt-3'>
+                    <v-row>
+                        <v-col cols='12' lg='6' class='px-1 pt-0 pb-0 pb-lg-3'>
+                            {{ form_widget(findForm.name) }}
+                        </v-col>
+                        <v-col cols='12' lg='6' class='px-1 pt-0'>
+                            {{ form_widget(findForm.description) }}
+                        </v-col>
+                    </v-row>
+                </v-flex>
+            </v-layout>
+            {% include 'theme/navigations-buttons.html.twig' %}
+        </v-container>
+    </form>
+{% endblock %}
+{% block table %}
+    <brands-table limit='{{ limit }}' positions='{{ entities|json_encode() }}'></brands-table>
+{% endblock %}
+{% block right_col %}
+    {% embed 'brands/form.html.twig' %}
+        {% block button %}
+            <span class='save-icon'></span>
+            Dodaj
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

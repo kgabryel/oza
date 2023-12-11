@@ -1,0 +1,59 @@
+version: '3'
+services:
+  oza-postgres:
+    container_name: oza-postgres
+    image: postgres:13.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespass
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+  oza-nginx:
+    image: nginx:1.19
+    ports:
+      - '80:80'
+      - '443:443'
+    expose:
+      - '443'
+      - '80'
+    volumes:
+      - ./../src:/var/www/html/
+      - ./site.conf:/etc/nginx/conf.d/site.conf
+      - ./logs:/var/log/nginx/
+      - ./ssl:/var/ssl/
+    depends_on:
+      - oza-php
+      - oza-ssl
+    links:
+      - oza-php
+  oza-php:
+    container_name: oza-php
+    build: ./php
+    ports:
+      - '9000:9000'
+    expose:
+      - '9000'
+      - '9003'
+    volumes:
+      - ./../src:/var/www/html/
+    depends_on:
+      - oza-postgres
+    links:
+      - oza-postgres
+    environment:
+      - COMPOSER_MEMORY_LIMIT=-1
+  oza-ssl:
+    build: ./ssl
+    volumes:
+      - ./ssl:/ssl/
+  oza-vue:
+    container_name: oza-vue
+    build: ./vue
+    volumes:
+      - ./../src:/var/www/src/
+    tty: true

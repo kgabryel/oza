@@ -1,0 +1,163 @@
+{% extends 'content.html.twig' %}
+{% set deletePath = path('units.destroy', {id: entity.id}) %}
+{% set backPath = path('units.index') %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' offset-xl='0' xl='4' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='summary' data-name='Podsumowanie'>
+                                Podsumowanie
+                            </v-toolbar>
+                            <v-simple-table>
+                                <template v-slot:default>
+                                    <tbody>
+                                    <tr>
+                                        <td class='font-weight-bold'>
+                                            Nazwa:
+                                        </td>
+                                        <td>
+                                            {{ entity.name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class='font-weight-bold'>
+                                            Skrót:
+                                        </td>
+                                        <td>
+                                            {{ entity.shortcut }}
+                                        </td>
+                                    </tr>
+                                    {% if entity.main is null %}
+                                        <tr>
+                                            <td class='font-weight-bold'>
+                                                Typ jednostki:
+                                            </td>
+                                            <td>
+                                                Jednostka główna
+                                            </td>
+                                        </tr>
+                                        {% if entity.units|length > 0 %}
+                                            <tr>
+                                                <td colspan='2' class='text-center font-weight-bold'>
+                                                    Jednostki podrzędne:
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan='2'>
+                                                    {% for unit in entity.units %}
+                                                        <unit-info-chip id='{{ unit.id }}' name='{{ unit.name }}'>
+                                                        </unit-info-chip>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% else %}
+                                        <tr>
+                                            <td class='font-weight-bold'>
+                                                Typ jednostki:
+                                            </td>
+                                            <td>
+                                                Jednostka podrzędna
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class='font-weight-bold'>
+                                                Przelicznik:
+                                            </td>
+                                            <td>
+                                                1 {{ entity.main.shortcut }}
+                                                = {{ entity.converter }} {{ entity.shortcut }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class='font-weight-bold'>
+                                                Jednostka nadrzędna:
+                                            </td>
+                                            <td>
+                                                <unit-info-button
+                                                    id='{{ entity.main.id }}'
+                                                    name='{{ entity.main.name }}'>
+                                                </unit-info-button>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </v-card>
+                    </v-col>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' xl='4' offset-xl='0' class='pa-3'>
+                        {% if entity.groups|length > 0 %}
+                            <v-card elevation='2' class='mb-3'>
+                                <v-toolbar
+                                    color='primary'
+                                    dark
+                                    dense
+                                    class='anchor'
+                                    id='products-groups'
+                                    data-name='Grupy produktów'>
+                                    Grupy Produktów
+                                </v-toolbar>
+                                <div class='pa-3'>
+                                    {% for productsGroup in entity.groups %}
+                                        <products-group-info-chip
+                                            id='{{ productsGroup.id }}'
+                                            name='{{ productsGroup.name }}'>
+                                        </products-group-info-chip>
+                                    {% endfor %}
+                                </div>
+                            </v-card>
+                        {% endif %}
+                        {% if entity.products|length > 0 %}
+                            <v-card elevation='2'>
+                                <v-toolbar color='primary' dark dense class='anchor' id='products' data-name='Produkty'>
+                                    Produkty
+                                </v-toolbar>
+                                <div class='pa-3'>
+                                    {% for product in entity.products %}
+                                        <products-group-info-chip id='{{ product.id }}' name='{{ product.name }}'>
+                                        </products-group-info-chip>
+                                    {% endfor %}
+                                </div>
+                            </v-card>
+                        {% endif %}
+                    </v-col>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' offset-xl='0' xl='4' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='edit' data-name='Edycja'>
+                                Edycja
+                            </v-toolbar>
+                            <form
+                                method='post'
+                                action='{{ path('units.update', {id: entity.id}) }}'
+                                class='pa-3 pt-0'
+                                {% if autocomplete == false %} autocomplete='off' {% endif %}>
+                                <input type='hidden' name='_method' value='put'/>
+                                {{ form_widget(form.name) }}
+                                {{ form_widget(form.shortcut) }}
+                                <input
+                                    type='hidden'
+                                    name='{{ form._token.vars.full_name }}'
+                                    value='{{ form._token.vars.value }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    <v-icon left dark>
+                                        mdi-content-save
+                                    </v-icon>
+                                    Aktualizuj
+                                </v-btn>
+                            </form>
+                            {% embed 'theme/additional-edit.html.twig' %}{% endembed %}
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <unit-info></unit-info>
+    <products-group-info></products-group-info>
+    <product-info></product-info>
+    <overlay></overlay>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'content.html.twig' %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' sm='12' md='6' lg='5' offset-lg='1'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='settings' data-name='Ustawienia'>
+                                Ustawienia
+                            </v-toolbar>
+                            <form method='post' action='{{ path('settings.store') }}' class='pa-3 pt-0'>
+                                {{ form_widget(settingsForm.hideBought) }}
+                                {{ form_widget(settingsForm.deleteUncheckedPositions) }}
+                                {{ form_widget(settingsForm.deleteUncheckedPositionsQuick) }}
+                                {{ form_widget(settingsForm.paginationCount) }}
+                                {{ form_widget(settingsForm.maxShopsGroupCount) }}
+                                {{ form_widget(settingsForm.newShoppingDays) }}
+                                {{ form_widget(settingsForm.createSupply) }}
+                                {{ form_widget(settingsForm.deleteLists) }}
+                                {{ form_widget(settingsForm.deleteListDays) }}
+                                {{ form_widget(settingsForm.deleteQuickLists) }}
+                                {{ form_widget(settingsForm.deleteQuickListDays) }}
+                                {{ form_widget(settingsForm.autocomplete) }}
+                                {{ form_widget(settingsForm.shoppingListLayoutType) }}
+                                <input
+                                        type='hidden'
+                                        name='{{ settingsForm._token.vars.full_name }}'
+                                        value='{{ settingsForm._token.vars.value }}' />
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    <v-icon left dark>
+                                        mdi-content-save
+                                    </v-icon>
+                                    Zapisz
+                                </v-btn>
+                                {% if reportAvailable %}
+                                    <a
+                                            href='{{ path('settings.downloadReport') }}'
+                                            class='text-decoration-none without-loading'>
+                                        <v-btn block color='primary' elevation='2' large type='button' class='mt-3'>
+                                            <v-icon left dark>
+                                                mdi-download
+                                            </v-icon>
+                                            Pobierz
+                                        </v-btn>
+                                    </a>
+                                {% endif %}
+                            </form>
+                        </v-card>
+                    </v-col>
+                    <v-col cols='12' sm='12' md='6' lg='5' class='keys-column'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='api-keys' data-name='Klucze API'>
+                                Klucze API
+                            </v-toolbar>
+                            <div class='pa-3'>
+                                <v-expansion-panels>
+                                    {% if keys|applicationKeys|length > 0 %}
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-header color='primary' class='text--white'>
+                                                Klucze OZA
+                                            </v-expansion-panel-header>
+                                            <v-expansion-panel-content>
+                                                {% for key in keys|applicationKeys %}
+                                                    <key
+                                                            api-key="{{ key.key }}"
+                                                            active='{{ key.active ? 'true': 'false' }}'
+                                                            id='{{ key.id }}'>
+                                                        <form
+                                                                method='post'
+                                                                action='{{ path('settings.updateKeyDescription', {id: key.id}) }}'>
+                                                            {{ form_widget(descriptionForm[key.id].description) }}
+                                                            <input type='hidden' name='_method' value='patch' />
+                                                            <input
+                                                                    type='hidden'
+                                                                    name='{{ descriptionForm[key.id]._token.vars.full_name }}'
+                                                                    value='{{ descriptionForm[key.id]._token.vars.value }}' />
+                                                            <v-btn
+                                                                    block
+                                                                    color='primary'
+                                                                    elevation='2'
+                                                                    large
+                                                                    type='submit'
+                                                                    class='mt-3'>
+                                                                <v-icon left dark>
+                                                                    mdi-content-save
+                                                                </v-icon>
+                                                                Aktualizuj opis
+                                                            </v-btn>
+                                                        </form>
+                                                    </key>
+                                                    {% if not loop.last %}
+                                                        <hr class='mt-2' />
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    {% endif %}
+
+                                    {% if keys|applicationKeys('KKK')|length > 0 %}
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-header color='primary' class='text--white'>
+                                                Klucze KKK
+                                            </v-expansion-panel-header>
+                                            <v-expansion-panel-content>
+                                                {% for key in keys|applicationKeys('KKK') %}
+                                                    <key
+                                                            api-key="{{ key.key }}"
+                                                            active='{{ key.active ? 'true': 'false' }}'
+                                                            id='{{ key.id }}'>
+                                                    </key>
+                                                    {% if not loop.last %}
+                                                        <hr class='mt-2' />
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    {% endif %}
+                                    {% if keys|applicationKeys('Drink')|length > 0 %}
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-header color='primary' class='text--white'>
+                                                Klucze Drink
+                                            </v-expansion-panel-header>
+                                            <v-expansion-panel-content>
+                                                {% for key in keys|applicationKeys('Drink') %}
+                                                    <key
+                                                            api-key="{{ key.key }}"
+                                                            active='{{ key.active ? 'true': 'false' }}'
+                                                            id='{{ key.id }}'>
+                                                    </key>
+                                                    {% if not loop.last %}
+                                                        <hr class='mt-2' />
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    {% endif %}
+                                </v-expansion-panels>
+                                <form method='post' action='{{ path('settings.generateKey') }}'>
+                                    <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                        <v-icon left dark>
+                                            mdi-key
+                                        </v-icon>
+                                        Generuj klucz
+                                    </v-btn>
+                                </form>
+                                <form method='post' action='{{ path('settings.store') }}' class='pa-0'>
+                                    {{ form_widget(keyForm.key) }}
+                                    {{ form_widget(keyForm.application) }}
+                                    <input
+                                            type='hidden'
+                                            name='{{ keyForm._token.vars.full_name }}'
+                                            value='{{ keyForm._token.vars.value }}' />
+                                    <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                        <v-icon left dark>
+                                            mdi-content-save
+                                        </v-icon>
+                                        Dodaj klucz
+                                    </v-btn>
+                                </form>
+                            </div>
+                        </v-card>
+                        {% if resetAvailable is same as(true) %}
+                            <v-card elevation='2'>
+                                <v-toolbar
+                                        color='primary'
+                                        dark
+                                        dense
+                                        class='mt-4 anchor'
+                                        id='password-reset'
+                                        data-name='Reset hasła'>
+                                    Reset hasła
+                                </v-toolbar>
+                                <div class='pa-3'>
+                                    <v-expansion-panels>
+                                        <form method='post'
+                                              action='{{ path('settings.store') }}'
+                                              class='pa-3 pt-0 w-100'>
+                                            {{ form_widget(changePasswordForm.oldPassword) }}
+                                            {{ form_widget(changePasswordForm.newPassword) }}
+                                            <input
+                                                    type='hidden'
+                                                    name='{{ changePasswordForm._token.vars.full_name }}'
+                                                    value='{{ changePasswordForm._token.vars.value }}' />
+                                            <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                                <v-icon left dark>
+                                                    mdi-restart
+                                                </v-icon>
+                                                Zmień hasło
+                                            </v-btn>
+                                        </form>
+                                    </v-expansion-panels>
+                                </div>
+                            </v-card>
+                        {% endif %}
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+{% endblock %}
