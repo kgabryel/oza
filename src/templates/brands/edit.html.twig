@@ -1,0 +1,80 @@
+{% extends 'content.html.twig' %}
+{% set header = 'Edycja' %}
+{% set formId = 'edit-brand' %}
+{% set action = path('brands.update', {id: entity.id}) %}
+{% set deletePath = path('brands.destroy', {id: entity.id}) %}
+{% set backPath = path('brands.index') %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' offset-xl='0' xl='4' class='pa-3'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='summary' data-name='Podsumowanie'>
+                                Podsumowanie
+                            </v-toolbar>
+                            <v-simple-table>
+                                <template v-slot:default>
+                                    <tbody>
+                                    <tr>
+                                        <td class='font-weight-bold'>
+                                            Nazwa:
+                                        </td>
+                                        <td>
+                                            {{ entity.name }}
+                                        </td>
+                                    </tr>
+                                    {% if entity.description != '' %}
+                                        <tr>
+                                            <td class='font-weight-bold text-center' colspan='2'>
+                                                Opis:
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan='2'>
+                                                {{ entity.description|raw }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </v-card>
+                    </v-col>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' offset-xl='0' xl='4' class='pa-3'>
+                        {% if entity.products|length > 0 %}
+                            <v-card elevation='2'>
+                                <v-toolbar color='primary' dark dense class='anchor' id='products' data-name='Produkty'>
+                                    Produkty
+                                </v-toolbar>
+                                <div class='pa-3'>
+                                    {% for product in entity.products %}
+                                        <product-info-chip id='{{ product.id }}' name='{{ product|toString }}'>
+                                        </product-info-chip>
+                                    {% endfor %}
+                                </div>
+                            </v-card>
+                        {% endif %}
+                    </v-col>
+                    <v-col cols='12' offset-md='2' md='8' offset-lg='2' lg='8' offset-xl='0' xl='4' class='pa-3'>
+                        {% embed 'brands/form.html.twig' %}
+                            {% block method %}
+                                <input type='hidden' name='_method' value='put'/>
+                            {% endblock %}
+                            {% block button %}
+                                <span class='edit-icon'></span>
+                                Aktualizuj
+                            {% endblock %}
+                            {% block additional %}
+                                {% embed 'theme/additional-edit.html.twig' %}{% endembed %}
+                            {% endblock %}
+                        {% endembed %}
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <product-info></product-info>
+    <overlay></overlay>
+{% endblock %}

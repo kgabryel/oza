@@ -1,0 +1,16 @@
+twig:
+  default_path: '%kernel.project_dir%/templates'
+  form_themes:
+    - 'inputs/material-text.html.twig'
+    - 'inputs/multi-select.html.twig'
+    - 'inputs/material-number.html.twig'
+    - 'inputs/material-textarea.html.twig'
+    - 'inputs/material-switch.html.twig'
+    - 'inputs/material-date.html.twig'
+    - 'inputs/material-email.html.twig'
+    - 'inputs/material-password.html.twig'
+    - 'inputs/material-repeated.html.twig'
+    - 'inputs/material-entityType.html.twig'
+    - 'inputs/choice.html.twig'
+    - 'inputs/wysiwyg.html.twig'
+    - 'inputs/material-barcode.html.twig'

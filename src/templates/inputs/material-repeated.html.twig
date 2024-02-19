@@ -1,0 +1,5 @@
+{% block repeated_widget %}
+    {% for passwordField in form %}
+        {{ form_widget(passwordField) }}
+    {% endfor %}
+{% endblock %}

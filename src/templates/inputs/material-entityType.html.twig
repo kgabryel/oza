@@ -1,0 +1,21 @@
+{% block entity_widget %}
+    {% if multiple %}
+        <input-multi-entity-type
+            label='{{ label }}'
+            name='{{ full_name }}'
+            errors='{{ errors|errorMessages|json_encode() }}'
+            items='{{ choices|multiselectOptions|json_encode() }}'
+            value='{{ value|json_encode() }}'
+            {% if attr.class is defined and attr.class == 'Product' %}scanner-enabled='true'{% endif %}>
+        </input-multi-entity-type>
+    {% else %}
+        <input-entity-type
+            label='{{ label }}'
+            name='{{ full_name }}'
+            value='{{ value|json_encode() }}'
+            errors='{{ errors|errorMessages|json_encode() }}'
+            items='{{ choices|json_encode() }}'
+            {% if attr.class is defined and attr.class == 'Product' %}scanner-enabled='true'{% endif %}>
+        </input-entity-type>
+    {% endif %}
+{% endblock %}

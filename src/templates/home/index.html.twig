@@ -1,0 +1,101 @@
+{% extends 'content.html.twig' %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' md='6' class='pa-3'>
+                        {% if notes|length > 0 %}
+                            <v-card elevation='2' class='mb-3'>
+                                <v-toolbar color='primary' dark dense class='anchor' id='notes' data-name='Notatki'>
+                                    Notatki
+                                </v-toolbar>
+                                <v-simple-table>
+                                    <template v-slot:default>
+                                        <tbody>
+                                        {% for note in notes %}
+                                            <tr>
+                                                <td>
+                                                    {{ note.content|raw }}
+                                                </td>
+                                                <td class='text-right'>
+                                                    <form
+                                                        action='{{ path('home.destroy', {id: note.id}) }}'
+                                                        method='post'
+                                                        class='d-inline-block'>
+                                                        <input type='hidden' name='_method' value='delete'/>
+                                                        <delete></delete>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </v-card>
+                        {% endif %}
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense class='anchor' id='new-note' data-name='Nowa notatka'>
+                                Nowa notatka
+                            </v-toolbar>
+                            <form
+                                method='post'
+                                action='{{ path('home.store') }}'
+                                class='pa-3 pt-0'
+                                {% if autocomplete == false %} autocomplete='off' {% endif %}>
+                                {{ form_widget(form.content) }}
+                                <input
+                                    type='hidden'
+                                    name='{{ form._token.vars.full_name }}'
+                                    value='{{ form._token.vars.value }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    <v-icon left dark>
+                                        mdi-content-save
+                                    </v-icon>
+                                    Dodaj
+                                </v-btn>
+                            </form>
+                        </v-card>
+                    </v-col>
+                    <v-col cols='12' md='6' class='pa-3'>
+                        {% if alerts|length > 0 %}
+                            <v-card elevation='2'>
+                                <v-toolbar
+                                    color='primary'
+                                    dark
+                                    dense
+                                    class='anchor'
+                                    id='active-alerts'
+                                    data-name='Aktywne powiadomienia'>
+                                    Aktywne powiadomienia
+                                </v-toolbar>
+                                <v-simple-table>
+                                    <template v-slot:default>
+                                        <tbody>
+                                        {% for alert in alerts %}
+                                            <tr>
+                                                <td>
+                                                    <a
+                                                        href='{{ path('alerts.show', {id: alert.id}) }}'
+                                                        class='text-decoration-none'>
+                                                        <alert
+                                                            type='{{ alert.type.type }}'
+                                                            name='{{ alert.type.name }}'
+                                                            description='{{ alert.description }}'>
+                                                        </alert>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </v-card>
+                        {% endif %}
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+{% endblock %}
+

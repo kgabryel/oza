@@ -1,0 +1,44 @@
+{% extends 'content.html.twig' %}
+{% block content %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' sm='8' offset-sm='2' md='6' offset-md='3' lg='4' offset-lg='4'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense>
+                                Aktualizuj listę
+                            </v-toolbar>
+                            <form
+                                method='post'
+                                action='{{ path('shoppingLists.update', {id: id}) }}'
+                                class='pa-3 pt-0'
+                                {% if autocomplete == false %} autocomplete='off' {% endif %}>
+                                <input type='hidden' name='_method' value='put'>
+                                {{ form_widget(form.name) }}
+                                {{ form_widget(form.note) }}
+                                <shopping-list-form-positions
+                                    groups='{{ productsGroups|json_encode() }}'
+                                    products='{{ products|json_encode() }}'
+                                    edit=true
+                                    positions='{{ form.positions|shoppingListPositions|json_encode() }}'>
+                                </shopping-list-form-positions>
+                                <input
+                                    type='hidden'
+                                    name='{{ form._token.vars.full_name }}'
+                                    value='{{ form._token.vars.value }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    <v-icon left dark>
+                                        mdi-content-save
+                                    </v-icon>
+                                    Zapisz
+                                </v-btn>
+                            </form>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <shopping-list-clipboard value='{{ clipboardPositions|json_encode() }}'></shopping-list-clipboard>
+{% endblock %}

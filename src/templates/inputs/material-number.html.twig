@@ -1,0 +1,11 @@
+{% block number_widget %}
+    <input-text-field
+        label='{{ label }}'
+        type='number'
+        name='{{ full_name }}'
+        value='{{ value }}'
+        step='{{ attr.step|default('any') }}'
+        errors='{{ errors|errorMessages|json_encode() }}'
+        {% if hint is defined %}bottom='{{ hint }}'{% endif %}>
+    </input-text-field>
+{% endblock %}

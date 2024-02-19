@@ -1,0 +1,72 @@
+{% extends 'theme/table-view.html.twig' %}
+{% block table_nav %}
+    <form method='get' action='{{ path('units.index') }}'{% if autocomplete == false %} autocomplete='off' {% endif %}>
+        <v-container fill-height grid-list>
+            <v-layout row wrap align-center>
+                <v-flex class='px-5 mt-3'>
+                    <v-row>
+                        <v-col cols='12' md='6' class='pt-0 pb-0 px-1'>
+                            {{ form_widget(findForm.name) }}
+                        </v-col>
+                        <v-col cols='12' md='6' class='pt-0 pb-0 px-1'>
+                            {{ form_widget(findForm.shortcut) }}
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols='12' md='6' class='pt-0 pb-0 pb-md-3 px-1'>
+                            {{ form_widget(findForm.types) }}
+                        </v-col>
+                        <v-col cols='12' md='6' class='pt-0 px-1'>
+                            {{ form_widget(findForm.units) }}
+                        </v-col>
+                    </v-row>
+                </v-flex>
+            </v-layout>
+            {% include 'theme/navigations-buttons.html.twig' %}
+        </v-container>
+    </form>
+{% endblock %}
+{% block table %}
+    <units-table limit='{{ limit }}' positions='{{ entities|json_encode() }}'></units-table>
+{% endblock %}
+{% block right_col %}
+    <v-card elevation='2'>
+        <v-toolbar color='primary' dark dense class='anchor' id='new-unit' data-name='Dodaj jednostkę'>
+            Dodaj jednostkę
+        </v-toolbar>
+        <form
+            method='post'
+            action='{{ path('units.store') }}'
+            class='pa-3 pt-0'
+            {% if autocomplete == false %} autocomplete='off' {% endif %}>
+            {{ form_widget(createForm.name) }}
+            {{ form_widget(createForm.shortcut) }}
+            <main-unit-switch
+                name='{{ createForm.isMainUnit.vars.full_name }}'
+                checked='{{ createForm.isMainUnit.vars.checked|boolToInt }}'
+                label='{{ createForm.isMainUnit.vars.label }}'>
+            </main-unit-switch>
+            <sub-unit-details>
+                <v-col cols='12' md='12' lg='6'>
+                    {{ form_widget(createForm.converter, {hint: createForm.converter.vars.help}) }}
+                </v-col>
+                <v-col cols='12' md='12' lg='6'>
+                    {{ form_widget(createForm.mainUnit) }}
+                </v-col>
+            </sub-unit-details>
+            <input
+                type='hidden'
+                name='{{ createForm._token.vars.full_name }}'
+                value='{{ createForm._token.vars.value }}'/>
+            <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                <v-icon left dark>
+                    mdi-content-save
+                </v-icon>
+                Dodaj
+            </v-btn>
+        </form>
+    </v-card>
+{% endblock %}
+{% block modals %}
+    <unit-info></unit-info>
+{% endblock %}

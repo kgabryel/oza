@@ -1,0 +1,40 @@
+{% extends 'theme/table-view.html.twig' %}
+{% set header = 'Dodaj grupę zapasów' %}
+{% set formId = 'add-supplies-group' %}
+{% set action = path('supplyGroups.store') %}
+{% block table_nav %}
+    <form
+        method='get'
+        action='{{ path('supplyGroups.index') }}'
+        {% if autocomplete == false %} autocomplete='off' {% endif %}>
+        <v-container fill-height grid-list>
+            <v-layout row wrap align-center>
+                <v-flex class='px-5 mt-3'>
+                    <v-row>
+                        <v-col cols='12' lg='6' class='px-1 pt-0 pb-0 pb-lg-3'>
+                            {{ form_widget(findForm.name) }}
+                        </v-col>
+                        <v-col cols='12' lg='6' class='px-1 pt-0'>
+                            {{ form_widget(findForm.productsGroups) }}
+                        </v-col>
+                    </v-row>
+                </v-flex>
+            </v-layout>
+            {% include 'theme/navigations-buttons.html.twig' %}
+        </v-container>
+    </form>
+{% endblock %}
+{% block table %}
+    <supply-groups-table limit='{{ limit }}' positions='{{ entities|json_encode() }}'></supply-groups-table>
+{% endblock %}
+{% block right_col %}
+    {% embed 'supplyGroup/form.html.twig' %}
+        {% block button %}
+            <span class='save-icon'></span>
+            Dodaj
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+{% block modals %}
+    <supply-info></supply-info>
+{% endblock %}

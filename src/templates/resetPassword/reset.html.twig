@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' sm='8' offset-sm='2' lg='4' offset-lg='4'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense>
+                                Resetuj hasło
+                            </v-toolbar>
+                            <form
+                                action='{{ path('resetPassword.changePassword', {token: token}) }}'
+                                method='post'
+                                class='pa-3 pt-0'>
+                                {{ form_widget(form.newPassword) }}
+                                <input
+                                    type='hidden'
+                                    name='{{ form._token.vars.full_name }}'
+                                    value='{{ form._token.vars.value }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    Zmień hasło
+                                </v-btn>
+                                <p class='text-center mt-3'>
+                                    <a href='{{ path('login.show') }}' class='text-decoration-none'>
+                                        Powrót
+                                    </a>
+                                </p>
+                            </form>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+{% endblock %}

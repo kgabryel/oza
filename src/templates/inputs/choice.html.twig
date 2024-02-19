@@ -1,0 +1,9 @@
+{% block choice_widget %}
+    <input-select
+        label='{{ label }}'
+        name='{{ full_name }}'
+        errors='{{ errors|errorMessages|json_encode() }}'
+        items='{{ choices|json_encode() }}'
+        value='{{ value }}'>
+    </input-select>
+{% endblock %}

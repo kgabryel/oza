@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+{% set passwordErrors = {  } %}
+{% if app.session.getFlashBag().has('passwordErrors') %}
+    {% set passwordErrors = app.flashes('passwordErrors')|merge(passwordErrors) %}
+{% endif %}
+  {% if app.session.getFlashBag().has('loginErrors') %}
+      {% set passwordErrors = app.flashes('loginErrors')|merge(passwordErrors) %}
+  {% endif %}
+{% block body %}
+    {% if app.session.getFlashBag().has('errorMessage') %}
+        <error-message text='{{ app.flashes('errorMessage')|json_encode() }}'></error-message>
+    {% endif %}
+    {% if app.session.getFlashBag().has('successMessage') %}
+        <info-message text='{{ app.flashes('successMessage')|json_encode() }}'></info-message>
+    {% endif %}
+    <v-container fill-height grid-list>
+        <v-layout row wrap align-center>
+            <v-flex class='px-5'>
+                <v-row>
+                    <v-col cols='12' sm='8' offset-sm='2' lg='4' offset-lg='4'>
+                        <v-card elevation='2'>
+                            <v-toolbar color='primary' dark dense>
+                                Zaloguj się
+                            </v-toolbar>
+                            <form action='{{ path('login.show') }}' method='post' class='pa-3 pt-0'>
+                                <input-text-field
+                                    label='Adres E-mail'
+                                    type='email'
+                                    name='email'
+                                    maxlength='180'
+                                    value='{{ app.session.get('_security.last_username') }}'
+                                    {% if app.session.getFlashBag().has('emailErrors') %}
+                                    errors='{{ app.flashes('emailErrors')|json_encode() }}'
+                                    {% endif %}>
+                                </input-text-field>
+                                <input-text-field
+                                    label='Hasło'
+                                    type='password'
+                                    name='password'
+                                    maxlength='255'
+                                    errors='{{ passwordErrors|json_encode() }}'>
+                                </input-text-field>
+                                <input type='hidden' name='_csrf_token' value='{{ csrf_token('authenticate') }}'/>
+                                <v-btn block color='primary' elevation='2' large type='submit' class='mt-3'>
+                                    Zaloguj się
+                                </v-btn>
+                                <p class='text-center mt-3'>
+                                    <span>
+                                        Nie masz konta?
+                                    </span>
+                                    <a href='{{ path('register.show') }}' class='text-decoration-none'>
+                                        Zarejestruj się
+                                    </a>
+                                </p>
+                                <p class='text-center mt-3'>
+                                    <a href='{{ path('resetPassword.showSendEmail') }}' class='text-decoration-none'>
+                                        Zapomniałeś hasła?
+                                    </a>
+                                </p>
+                                <a href='{{ path('fb.auth') }}' class='text-decoration-none'>
+                                    <v-btn block color='secondary' elevation='2' large type='button'>
+                                        <v-icon left dark>
+                                            mdi-facebook
+                                        </v-icon>
+                                        Zaloguj się przez Facebook
+                                    </v-btn>
+                                </a>
+                            </form>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-flex>
+        </v-layout>
+    </v-container>
+{% endblock %}

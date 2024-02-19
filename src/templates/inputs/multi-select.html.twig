@@ -1,0 +1,9 @@
+{% block multi_select_widget %}
+    <input-multi-select
+        label='{{ label }}'
+        name='{{ full_name }}'
+        errors='{{ errors|errorMessages|json_encode() }}'
+        items='{{ choices|multiselectOptions|json_encode() }}'
+        value='{{ value|json_encode() }}'>
+    </input-multi-select>
+{% endblock %}

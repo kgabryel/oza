@@ -1,0 +1,8 @@
+{% block wysiwyg_widget %}
+    <wysiwyg
+        label='{{ label }}'
+        name='{{ full_name }}'
+        value='{{ value }}'
+        errors='{{ errors|errorMessages|json_encode() }}'>
+    </wysiwyg>
+{% endblock %}
