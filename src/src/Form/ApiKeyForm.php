@@ -8,12 +8,12 @@ use App\Entity\Application;
 use App\Model\Form\ApiKey;
 use App\Repository\ApiKeyRepository;
 use App\Repository\ApplicationRepository;
+use App\Services\UserService;
 use App\Validator\UniqueKey;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -27,10 +27,10 @@ class ApiKeyForm extends UserForm
 
     public function __construct(
         ApplicationRepository $applicationRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ApiKeyRepository $apiKeyRepository
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->applications = $applicationRepository->findAll();
 
         $this->apiKeyRepository = $apiKeyRepository;
@@ -55,7 +55,7 @@ class ApiKeyForm extends UserForm
                     'max' => ApiKeyConfig::KEY_MAX_LENGTH,
                     'maxMessage' => ApiKeyErrors::KEY_TOO_LONG
                 ]),
-                new Callback(function ($value, ExecutionContext $context) {
+                new Callback(function($value, ExecutionContext $context) {
                     $validator = new UniqueKey(
                         $context,
                         ApiKeyErrors::KEY_NOT_UNIQUE,

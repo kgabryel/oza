@@ -22,10 +22,10 @@ class ApiKeyFactory extends EntityFactory
         /** @var ApiKeyModel $data */
         $data = $form->getData();
         $apiKey = new ApiKey();
-        $apiKey->setUser($this->user);
-        $apiKey->setKey($data->getKey());
-        $apiKey->activate();
-        $apiKey->setApplication($data->getApplication());
+        $apiKey->setUser($this->user)
+            ->setKey($data->getKey())
+            ->activate()
+            ->setApplication($data->getApplication());
         $this->saveEntity($apiKey);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, SettingsMessages::KEY_CREATED_CORRECTLY);
 

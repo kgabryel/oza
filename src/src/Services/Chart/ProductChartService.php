@@ -12,10 +12,7 @@ class ProductChartService extends ChartService
     public function setProduct(Product $product): self
     {
         $this->product = $product;
-        $unit = $this->product->getUnit();
-        if ($unit->getMain() !== null) {
-            $unit = $unit->getMain();
-        }
+        $unit = $this->product->getUnit()->getMain() ?? $this->product->getUnit();
         $this->data[Chart::UNIT] = $unit->getShortcut();
 
         return $this;

@@ -35,6 +35,7 @@ class EditProduct
         $product->setProductsGroups(new ArrayCollection($entity->getGroups()->toArray()));
         $product->setBrand($entity->getBrand());
         $product->setBarcode($entity->getBarcode());
+
         return $product;
     }
 

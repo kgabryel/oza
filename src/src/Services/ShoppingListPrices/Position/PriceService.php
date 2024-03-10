@@ -15,24 +15,23 @@ use App\Services\ShoppingListPrices\Position\Shopping\NewShopping;
 use App\Services\ShoppingListPrices\Position\Shopping\NullShopping;
 use App\Services\ShoppingListPrices\Position\Shopping\OldShopping;
 use App\Services\ShoppingListPrices\Position\Shopping\Shopping as ShoppingInterface;
+use App\Services\UserService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PriceService
 {
     private int $newShoppingDays;
     private Position $position;
     private ShoppingRepository $shoppingRepository;
-    /** @var Shop[] */
     private array $shops;
     private User $user;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ShoppingRepository $shoppingRepository,
         SessionInterface $session
     ) {
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $userService->getUser();
         $this->setShops();
         $this->shoppingRepository = $shoppingRepository;
         $this->newShoppingDays = $session->get(Settings::NEW_SHOPPING_DAYS);
@@ -64,11 +63,7 @@ class PriceService
 
         return array_merge(
             $sorted,
-            array_filter(
-                $shops,
-                static fn($shopping): bool => $shopping instanceof NullShoppingDto
-                    && !is_subclass_of($shopping, NullShoppingDto::class)
-            )
+            array_filter($shops, static fn($shopping): bool => $shopping instanceof NullShoppingDto)
         );
     }
 
@@ -114,10 +109,10 @@ class PriceService
 
     private function getNewPrices(): array
     {
-        $group = $this->position->getGroup();
-        if ($group !== null) {
+        $positionValue = $this->position->getValue();
+        if ($positionValue->isProductsGroup()) {
             return $this->shoppingRepository->getNewPricesForProductsGroup(
-                $group,
+                $positionValue->getProductsGroup(),
                 null,
                 $this->newShoppingDays,
                 null
@@ -125,7 +120,7 @@ class PriceService
         }
 
         return $this->shoppingRepository->getNewPricesForProducts(
-            $this->position->getProduct(),
+            $positionValue->getProduct(),
             null,
             $this->newShoppingDays,
             null
@@ -134,17 +129,17 @@ class PriceService
 
     private function getOldShopping(Shop $shop): ?Shopping
     {
-        $group = $this->position->getGroup();
-        if ($group !== null) {
+        $positionValue = $this->position->getValue();
+        if ($positionValue->isProductsGroup()) {
             return $this->shoppingRepository->getOldPricesForProductsGroup(
-                $group,
+                $positionValue->getProductsGroup(),
                 $shop,
                 $this->newShoppingDays
             );
         }
 
         return $this->shoppingRepository->getOldPricesForProduct(
-            $this->position->getProduct(),
+            $positionValue->getProduct(),
             $shop,
             $this->newShoppingDays
         );

@@ -42,12 +42,12 @@ final class BrandsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $brand = $brandService->getBrand();
-        $editViewData->addEntity($brand);
         $form = $this->createForm(BrandForm::class, BrandModel::fromEntity($brand), [
             'method' => Request::METHOD_PUT,
             'expect' => $brand->getId()
         ]);
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($brand);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -76,8 +76,8 @@ final class BrandsController extends BaseController
         if ($brandService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addEntity($brand);
-        $editViewData->addForm($form);
+        $editViewData->addEntity($brand)
+            ->addForm($form);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

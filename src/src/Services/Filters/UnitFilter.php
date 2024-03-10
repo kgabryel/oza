@@ -6,10 +6,10 @@ use App\Controller\Web\UnitsController;
 use App\Form\Filters\UnitFindForm;
 use App\Model\Filter\Unit;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UnitFilter extends Filter
 {
@@ -17,19 +17,18 @@ class UnitFilter extends Filter
         FormFactoryInterface $factory,
         RequestStack $stack,
         UnitRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct(
             $factory,
             $stack,
-            $repository,
-            $tokenStorage,
+            $userService,
             $router,
             UnitFindForm::class,
             UnitsController::INDEX_URL
         );
         $data = $this->form->getData() ?? new Unit();
-        $this->results = $this->repository->filter($this->user, $data);
+        $this->results = $repository->filter($this->user, $data);
     }
 }

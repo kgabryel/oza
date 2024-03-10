@@ -9,6 +9,19 @@
 /src/var/
 /src/vendor/
 ###< symfony/framework-bundle ###
+
+###> squizlabs/php_codesniffer ###
+/src/.phpcs-cache
+/src/phpcs.xml
+###< squizlabs/php_codesniffer ###
+
+###> symfony/webpack-encore-bundle ###
+/src/node_modules/
+/src/public/build/
+/src/npm-debug.log
+/src/yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
 /.idea
 /docker/pgdata
 /docker/logs
@@ -16,3 +29,4 @@
 /src/files/
 /src/public/css/*/*.css
 /src/public/css/*/*.css.map
+

@@ -13,11 +13,11 @@ use App\Model\Filter\Product;
 use App\Repository\BrandRepository;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductFindForm extends UserForm
 {
@@ -28,10 +28,10 @@ class ProductFindForm extends UserForm
     public function __construct(
         UnitRepository $repository,
         ProductsGroupRepository $productsGroupRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         BrandRepository $brandRepository
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->units = $repository->findBy([
             'user' => $this->user
         ]);

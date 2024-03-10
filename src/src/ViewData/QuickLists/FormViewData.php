@@ -6,20 +6,20 @@ use App\Config\ViewParameters;
 use App\Entity\QuickList\ClipboardPosition;
 use App\Repository\QuickList\ClipboardPositionRepository;
 use App\Services\Transformer\QuickListClipboardPositionTransformer;
+use App\Services\UserService;
 use App\ViewData\ViewData;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FormViewData extends ViewData
 {
     public function __construct(
         ClipboardPositionRepository $clipboardPositionRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SessionInterface $session
     ) {
         parent::__construct($session);
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->options[ViewParameters::CLIPBOARD_POSITIONS] = array_map(
             static fn(ClipboardPosition $position): array => QuickListClipboardPositionTransformer::toArray($position),
             $clipboardPositionRepository->findBy(['user' => $user], ['id' => 'DESC'])

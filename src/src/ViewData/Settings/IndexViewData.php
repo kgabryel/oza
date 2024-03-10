@@ -3,24 +3,22 @@
 namespace App\ViewData\Settings;
 
 use App\Config\ViewParameters;
-use App\Entity\User;
 use App\Repository\SupplyRepository;
+use App\Services\UserService;
 use App\ViewData\ViewData;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class IndexViewData extends ViewData
 {
     public function __construct(
         SessionInterface $session,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyRepository $supplyRepository
     ) {
         parent::__construct($session);
-        /** @var User $user */
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->options[ViewParameters::DESCRIPTION_FORM] = [];
         $this->options[ViewParameters::REPORT_AVAILABLE] = $supplyRepository->findForUser($user) !== [];
         $this->options[ViewParameters::RESET_AVAILABLE] = $user->getFbId() === null;

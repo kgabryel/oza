@@ -21,8 +21,8 @@ class PositionFactory
     public function create(QuickListPosition $positionData): void
     {
         $position = new Position();
-        $position->setContent($positionData->getPosition());
-        $position->setList($this->list);
+        $position->setContent($positionData->getPosition())
+            ->setList($this->list);
         $this->entityManager->persist($position);
     }
 

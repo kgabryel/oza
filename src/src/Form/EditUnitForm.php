@@ -6,11 +6,11 @@ use App\Config\Form\UnitConfig;
 use App\Config\Message\Error\UnitErrors;
 use App\Model\Form\EditUnit;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -19,9 +19,9 @@ class EditUnitForm extends UserForm
 {
     private UnitRepository $repository;
 
-    public function __construct(UnitRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(UnitRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->repository = $repository;
     }
 
@@ -44,13 +44,12 @@ class EditUnitForm extends UserForm
                     'max' => UnitConfig::NAME_MAX_LENGTH,
                     'maxMessage' => UnitErrors::NAME_TOO_LONG
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->repository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::EXPECT_OPTION => $options['expect'],
-                    UniqueForUser::MESSAGE_OPTION => UnitErrors::NAME_IN_USE
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    UnitErrors::NAME_IN_USE,
+                    $this->repository,
+                    expect: $options['expect']
+                )
             ]
         ])
             ->add('shortcut', TextType::class, [
@@ -70,13 +69,13 @@ class EditUnitForm extends UserForm
                         'max' => UnitConfig::SHORTCUT_MAX_LENGTH,
                         'maxMessage' => UnitErrors::SHORTCUT_TOO_LONG
                     ]),
-                    new UniqueForUser([
-                        UniqueForUser::USER_OPTION => $this->user,
-                        UniqueForUser::REPOSITORY_OPTION => $this->repository,
-                        UniqueForUser::COLUMN_NAME_OPTION => 'shortcut',
-                        UniqueForUser::EXPECT_OPTION => $options['expect'],
-                        UniqueForUser::MESSAGE_OPTION => UnitErrors::SHORTCUT_IN_USE
-                    ])
+                    new UniqueForUser(
+                        $this->user,
+                        UnitErrors::SHORTCUT_IN_USE,
+                        $this->repository,
+                        'shortcut',
+                        $options['expect']
+                    )
                 ]
             ]);
     }

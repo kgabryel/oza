@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use Symfony\Component\Form\Form;
+use App\Utils\FormUtils;
 use Symfony\Component\Validator\Context\ExecutionContext;
 
 class GreaterThanOrEqual
@@ -23,8 +23,7 @@ class GreaterThanOrEqual
         if ($value === null) {
             return;
         }
-        /** @var Form $form */
-        $form = $this->context->getObject()->getParent();
+        $form = FormUtils::getParentForm($this->context);
         $connectedField = $form->get($this->field);
         if (!$connectedField->isValid()) {
             return;

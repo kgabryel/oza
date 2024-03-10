@@ -6,11 +6,11 @@ use App\Config\Form\SupplyGroupConfig;
 use App\Config\Message\Error\SupplyGroupErrors;
 use App\Model\Form\SupplyGroup;
 use App\Repository\SupplyGroupRepository;
+use App\Services\UserService;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -19,9 +19,9 @@ class SupplyGroupForm extends UserForm
 {
     private SupplyGroupRepository $repository;
 
-    public function __construct(SupplyGroupRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(SupplyGroupRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->repository = $repository;
     }
 
@@ -44,13 +44,12 @@ class SupplyGroupForm extends UserForm
                     'max' => SupplyGroupConfig::NAME_MAX_LENGTH,
                     'maxMessage' => SupplyGroupErrors::NAME_TOO_LONG
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->repository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::EXPECT_OPTION => $options['expect'],
-                    UniqueForUser::MESSAGE_OPTION => SupplyGroupErrors::NAME_IN_USE
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    SupplyGroupErrors::NAME_IN_USE,
+                    $this->repository,
+                    expect: $options['expect']
+                )
             ]
         ]);
     }

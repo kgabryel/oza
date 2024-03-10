@@ -135,7 +135,7 @@ class Shop implements Stringable
 
     public function removeListPosition(Position $position): self
     {
-        if ($this->positions->removeElement($position) && $position->getShop() === $this) {
+        if ($this->positions->removeElement($position)) {
             $position->setShop(null);
         }
 
@@ -144,9 +144,7 @@ class Shop implements Stringable
 
     public function removeShopping(Shopping $shopping): self
     {
-        if ($this->shopping->contains($shopping)) {
-            $this->shopping->removeElement($shopping);
-        }
+        $this->shopping->removeElement($shopping);
 
         return $this;
     }

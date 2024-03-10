@@ -51,7 +51,7 @@ class SupplyRepository extends ServiceEntityRepository implements FindForUser
         return $builder->getQuery()->getResult();
     }
 
-    public function findById($id, User $user)
+    public function findById(int $id, User $user): ?Supply
     {
         return $this->createQueryBuilder('e')
             ->innerJoin('e.group', 'g')
@@ -64,7 +64,7 @@ class SupplyRepository extends ServiceEntityRepository implements FindForUser
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return Supply[]
      */

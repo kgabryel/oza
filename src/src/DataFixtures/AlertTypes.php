@@ -19,26 +19,11 @@ class AlertTypes extends Fixture
     public function load(ObjectManager $manager): void
     {
         $types = [
-            [
-                'Brak',
-                'error'
-            ],
-            [
-                'Końcówka',
-                'warning'
-            ],
-            [
-                'Jeżeli jest promocja',
-                'success'
-            ],
-            [
-                'Informacja',
-                'info'
-            ],
-            [
-                'Przy okazji',
-                ''
-            ]
+            ['Brak', 'error'],
+            ['Końcówka', 'warning'],
+            ['Jeżeli jest promocja', 'success'],
+            ['Informacja', 'info'],
+            ['Przy okazji', '']
         ];
         foreach ($types as $type) {
             $entity = $this->create($type);
@@ -52,9 +37,7 @@ class AlertTypes extends Fixture
 
     private function create(array $data): ?AlertType
     {
-        $alertType = $this->alertTypeRepository->findOneBy([
-            'name' => $data[0]
-        ]);
+        $alertType = $this->alertTypeRepository->findOneBy(['name' => $data[0]]);
         if ($alertType !== null) {
             return null;
         }

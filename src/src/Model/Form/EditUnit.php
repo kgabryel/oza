@@ -2,6 +2,8 @@
 
 namespace App\Model\Form;
 
+use App\Entity\Unit;
+
 class EditUnit
 {
     private ?string $name;
@@ -13,7 +15,7 @@ class EditUnit
         $this->shortcut = null;
     }
 
-    public static function fromEntity($entity): self
+    public static function fromEntity(Unit $entity): self
     {
         $unit = new self();
         $unit->setName($entity->getName());

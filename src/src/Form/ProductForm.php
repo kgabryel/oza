@@ -14,6 +14,7 @@ use App\Repository\BrandRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use App\Validator\ConnectedUnit\ProductConnectedUnit;
 use App\Validator\SameUnits\SameUnits;
 use App\Validator\UniqueForUser\UniqueForUser;
@@ -23,7 +24,6 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
@@ -40,13 +40,13 @@ class ProductForm extends UserForm
     private array $units;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ProductsGroupRepository $productsGroupRepository,
         ProductRepository $productRepository,
         UnitRepository $unitRepository,
         BrandRepository $brandRepository
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->productRepository = $productRepository;
         $this->units = $unitRepository->findForUser($this->user);
         $this->productsGroups = $productsGroupRepository->findBy([
@@ -74,7 +74,7 @@ class ProductForm extends UserForm
                     'max' => ProductConfig::NAME_MAX_LENGTH,
                     'maxMessage' => ProductErrors::NAME_TOO_LONG
                 ]),
-                new Callback(function ($value, ExecutionContext $context) {
+                new Callback(function($value, ExecutionContext $context) {
                     $validator = new UniqueProductName(
                         $context,
                         ProductErrors::NAME_WITH_BRAND_IN_USE,
@@ -126,7 +126,7 @@ class ProductForm extends UserForm
                     new NotBlank([
                         'message' => ProductErrors::UNIT_MISSING
                     ]),
-                    new Callback(function ($value, ExecutionContext $context) {
+                    new Callback(function($value, ExecutionContext $context) {
                         $validator = new ProductConnectedUnit($context);
                         $validator->validate($value);
                     })
@@ -152,12 +152,11 @@ class ProductForm extends UserForm
                         'max' => ProductConfig::NAME_BARCODE_LENGTH,
                         'maxMessage' => ProductErrors::BARCODE_TOO_LONG
                     ]),
-                    new UniqueForUser([
-                        UniqueForUser::USER_OPTION => $this->user,
-                        UniqueForUser::REPOSITORY_OPTION => $this->productRepository,
-                        UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                        UniqueForUser::MESSAGE_OPTION => ProductErrors::BARCODE_IN_USE
-                    ])
+                    new UniqueForUser(
+                        $this->user,
+                        ProductErrors::BARCODE_IN_USE,
+                        $this->productRepository
+                    )
                 ]
             ]);
     }

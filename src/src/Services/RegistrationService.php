@@ -37,7 +37,7 @@ class RegistrationService
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    public function authenticate(UserInterface $user): ?Response
+    public function authenticate(UserInterface $user): Response
     {
         return $this->guardHandler->authenticateUserAndHandleSuccess(
             $user,

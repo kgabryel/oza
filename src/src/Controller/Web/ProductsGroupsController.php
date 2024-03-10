@@ -49,7 +49,6 @@ final class ProductsGroupsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $productsGroup = $productsGroupService->getProductsGroup();
-        $editViewData->addEntity($productsGroup);
         $form = $this->createForm(
             EditProductsGroupForm::class,
             EditProductsGroup::fromEntity($productsGroup),
@@ -58,7 +57,8 @@ final class ProductsGroupsController extends BaseController
                 'expect' => $productsGroup->getId()
             ]
         );
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($productsGroup);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -88,8 +88,8 @@ final class ProductsGroupsController extends BaseController
         if ($productsGroupService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addForm($form);
-        $editViewData->addEntity($productsGroup);
+        $editViewData->addForm($form)
+            ->addEntity($productsGroup);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

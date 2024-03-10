@@ -11,8 +11,8 @@ class ClipboardPositionFactory extends EntityFactory
     public function create(Position $position): void
     {
         $clipboardPosition = new ClipboardPosition();
-        $clipboardPosition->setUser($this->user);
-        $clipboardPosition->setContent($position->getContent());
+        $clipboardPosition->setUser($this->user)
+            ->setContent($position->getContent());
         $this->entityManager->persist($clipboardPosition);
     }
 }

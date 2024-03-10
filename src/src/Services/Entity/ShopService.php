@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\Shop;
 use App\Model\Form\Shop as ShopModel;
 use App\Repository\ShopRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShopService extends EntityService
 {
@@ -21,10 +21,10 @@ class ShopService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ShopRepository $shopRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->shopRepository = $shopRepository;
     }
 
@@ -59,8 +59,8 @@ class ShopService extends EntityService
         }
         /** @var ShopModel $data */
         $data = $form->getData();
-        $this->shop->setName($data->getName());
-        $this->shop->setDescription($data->getDescription());
+        $this->shop->setName($data->getName())
+            ->setDescription($data->getDescription());
         $this->saveEntity($this->shop);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, ShopsMessages::UPDATE_CORRECT);
 

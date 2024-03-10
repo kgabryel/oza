@@ -25,6 +25,6 @@ class CreateKey extends Action
 
     public function onSuccess(): Response
     {
-        return new RedirectResponse($this->request->headers->get('referer'), 302);
+        return new RedirectResponse($this->request->headers->get('referer') ?? '', 302);
     }
 }

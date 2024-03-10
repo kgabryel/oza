@@ -12,12 +12,12 @@ use App\Repository\ShoppingList\ListRepository;
 use App\Services\Factory\ShoppingList\ClipboardPositionFactory;
 use App\Services\Factory\ShoppingList\PositionFactory;
 use App\Services\PositionMergeService;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShoppingListService extends EntityService
 {
@@ -28,11 +28,11 @@ class ShoppingListService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ListRepository $listRepository,
         PositionMergeService $mergeService
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->listRepository = $listRepository;
         $this->mergeService = $mergeService;
     }
@@ -80,12 +80,11 @@ class ShoppingListService extends EntityService
         $data->setPositions(
             array_filter(
                 $data->getPositions(),
-                static fn(ShoppingListPosition $position) => $position->getProduct() !== null
-                    || $position->getProductsGroup() !== null
+                static fn(ShoppingListPosition $position) => $position->getValue() !== null
             )
         );
-        $this->shoppingList->setName($data->getName());
-        $this->shoppingList->setNote($data->getNote() ?? '');
+        $this->shoppingList->setName($data->getName())
+            ->setNote($data->getNote() ?? '');
         $this->entityManager->beginTransaction();
         foreach ($this->shoppingList->getPositions() as $position) {
             $this->removeEntity($position);

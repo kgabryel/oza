@@ -20,9 +20,9 @@ class ShopFactory extends EntityFactory
         /** @var ShopModel $data */
         $data = $form->getData();
         $shop = new Shop();
-        $shop->setUser($this->user);
-        $shop->setName($data->getName());
-        $shop->setDescription($data->getDescription());
+        $shop->setUser($this->user)
+            ->setName($data->getName())
+            ->setDescription($data->getDescription());
         $this->saveEntity($shop);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, ShopsMessages::CREATED_CORRECTLY);
 

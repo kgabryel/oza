@@ -20,8 +20,8 @@ class SupplyGroupFactory extends EntityFactory
         /** @var SupplyGroupModel $data */
         $data = $form->getData();
         $shop = new SupplyGroup();
-        $shop->setUser($this->user);
-        $shop->setName($data->getName());
+        $shop->setUser($this->user)
+            ->setName($data->getName());
         $this->saveEntity($shop);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, SupplyGroupsMessages::CREATED_CORRECTLY);
 

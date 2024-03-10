@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Entity\ProductsGroup;
 use App\Entity\Shop;
 use App\Entity\Unit;
+use App\Model\PositionDto;
 use App\Repository\ShoppingList\PositionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -66,11 +67,6 @@ class Position
         $this->checked = true;
 
         return $this;
-    }
-
-    public function getContent(): Product|ProductsGroup
-    {
-        return $this->group ?? $this->product;
     }
 
     public function getDescription(): ?string
@@ -167,20 +163,15 @@ class Position
         return $this->checked;
     }
 
-    public function isGroup(): bool
-    {
-        return $this->group !== null;
-    }
-
-    public function isProduct(): bool
-    {
-        return $this->product !== null;
-    }
-
     public function unCheck(): self
     {
         $this->checked = false;
 
         return $this;
+    }
+
+    public function getValue(): PositionDto
+    {
+        return new PositionDto($this);
     }
 }

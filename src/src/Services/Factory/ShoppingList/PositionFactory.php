@@ -25,15 +25,15 @@ class PositionFactory
     public function create(ShoppingListPosition $data): self
     {
         $this->position = new Position();
-        $this->position->setUnitValue($data->getAmount());
-        $this->position->setUnit($data->getUnit());
-        $this->position->setProduct($data->getProduct());
-        $this->position->setGroup($data->getProductsGroup());
+        $this->position->setUnitValue($data->getAmount())
+            ->setUnit($data->getUnit())
+            ->setProduct($data->getProduct())
+            ->setGroup($data->getProductsGroup())
+            ->setShop($data->getShop() ?? $this->findShop());
         $data->isChecked() ? $this->position->check() : $this->position->unCheck();
         if ($data->getDescription() !== null && $data->getDescription() !== '') {
             $this->position->setDescription($data->getDescription());
         }
-        $this->position->setShop($data->getShop() ?? $this->findShop());
 
         return $this;
     }

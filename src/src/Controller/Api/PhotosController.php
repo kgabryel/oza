@@ -6,7 +6,7 @@ use App\Services\Entity\PhotoService;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-class PhotosController extends BaseController
+final class PhotosController extends BaseController
 {
     private PhotoService $photoService;
 

@@ -127,9 +127,7 @@ class ShoppingList
 
     public function removeListPosition(Position $position): self
     {
-        if ($this->positions->contains($position)) {
-            $this->positions->removeElement($position);
-        }
+        $this->positions->removeElement($position);
 
         return $this;
     }

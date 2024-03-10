@@ -8,8 +8,13 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class SameUnitsValidator extends ConstraintValidator
 {
-    /** @var SameUnits $constraint */
-    public function validate($value, Constraint $constraint): void
+    /**
+     * @param  array  $value
+     * @param  SameUnits  $constraint
+     *
+     * @return void
+     */
+    public function validate(mixed $value, Constraint $constraint): void
     {
         $unit = null;
         $valid = true;

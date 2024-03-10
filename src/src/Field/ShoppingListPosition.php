@@ -9,13 +9,13 @@ use App\Entity\Unit;
 use App\Repository\ShopRepository;
 use App\Repository\UnitRepository;
 use App\Services\PositionFactory\PositionFactory;
+use App\Services\UserService;
 use App\Transformer\ShoppingListPositionTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
@@ -28,12 +28,12 @@ class ShoppingListPosition extends AbstractType
 
     public function __construct(
         PositionFactory $factory,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         UnitRepository $unitRepository,
         ShopRepository $shopRepository
     ) {
         $this->factory = $factory;
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->shops = $shopRepository->findForUser($user);
         $this->units = $unitRepository->findForUser($user);
     }

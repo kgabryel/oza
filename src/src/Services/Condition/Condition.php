@@ -17,7 +17,7 @@ abstract class Condition
         $this->failAction = static fn() => null;
     }
 
-    abstract public function __invoke();
+    abstract public function __invoke(): mixed;
 
     public function setFailAction(Closure $failAction): void
     {
@@ -29,7 +29,7 @@ abstract class Condition
         $this->successAction = $successAction;
     }
 
-    protected function decide()
+    protected function decide(): mixed
     {
         return ($this->condition)() ? ($this->successAction)() : ($this->failAction)();
     }

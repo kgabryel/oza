@@ -5,7 +5,7 @@ namespace App\Validator;
 use App\Entity\Application;
 use App\Entity\User;
 use App\Repository\ApiKeyRepository;
-use Symfony\Component\Form\Form;
+use App\Utils\FormUtils;
 use Symfony\Component\Validator\Context\ExecutionContext;
 
 class UniqueKey
@@ -32,8 +32,7 @@ class UniqueKey
         if ($value === null) {
             return;
         }
-        /** @var Form $form */
-        $form = $this->context->getObject()->getParent();
+        $form = FormUtils::getParentForm($this->context);
         $connectedField = $form->get('application');
         if (!$connectedField->isValid()) {
             return;

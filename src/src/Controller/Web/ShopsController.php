@@ -42,12 +42,12 @@ final class ShopsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $shop = $shopService->getShop();
-        $editViewData->addEntity($shop);
         $form = $this->createForm(ShopForm::class, ShopModel::fromEntity($shop), [
             'method' => Request::METHOD_PUT,
             'expect' => $shop->getId()
         ]);
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($shop);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -76,8 +76,8 @@ final class ShopsController extends BaseController
         if ($shopService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addEntity($shop);
-        $editViewData->addForm($form);
+        $editViewData->addEntity($shop)
+            ->addForm($form);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

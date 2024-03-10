@@ -3,6 +3,7 @@
 namespace App\Services\SettingsStoreAction;
 
 use App\Services\SettingsService;
+use App\Services\UserService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,7 @@ class ChangePassword extends Action
     private SettingsService $settingsService;
     private TokenStorageInterface $tokenStorage;
     private UserPasswordHasherInterface $userPasswordHasher;
+    private UserService $userService;
 
     public function __construct(
         Request $request,
@@ -24,18 +26,20 @@ class ChangePassword extends Action
         TokenStorageInterface $tokenStorage,
         SettingsService $settingsService,
         UserPasswordHasherInterface $userPasswordHasher,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        UserService $userService
     ) {
         parent::__construct($request, $form);
         $this->tokenStorage = $tokenStorage;
         $this->settingsService = $settingsService;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->router = $router;
+        $this->userService = $userService;
     }
 
     public function execute(): bool
     {
-        if ($this->tokenStorage->getToken()->getUser()->getFbId() !== null) {
+        if ($this->userService->getUser()->getFbId() !== null) {
             return false;
         }
 

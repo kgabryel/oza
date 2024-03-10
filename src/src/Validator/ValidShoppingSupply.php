@@ -7,7 +7,7 @@ use App\Entity\Product;
 use App\Entity\ProductsGroup;
 use App\Entity\Supply;
 use App\Services\PositionFactory\PositionFactory;
-use Symfony\Component\Form\Form;
+use App\Utils\FormUtils;
 use Symfony\Component\Validator\Context\ExecutionContext;
 
 class ValidShoppingSupply
@@ -26,8 +26,7 @@ class ValidShoppingSupply
         if ($value === null) {
             return;
         }
-        /** @var Form $form */
-        $form = $this->context->getObject()->getParent();
+        $form = FormUtils::getParentForm($this->context);
         $createSupply = $form->get('createSupply')->getNormData();
         if (!$createSupply) {
             return;
@@ -57,6 +56,7 @@ class ValidShoppingSupply
         if ($productsGroupSupply === null) {
             return false;
         }
+
         return $productsGroupSupply->getId() === $supply->getId();
     }
 
@@ -70,21 +70,4 @@ class ValidShoppingSupply
 
         return false;
     }
-    /*
-    private function showError(?Brand $brand, ?string $value): void
-    {
-        if ($brand === null) {
-            $this->context->buildViolation($this->messageWithoutBrand, [
-                '{{ name }}' => $value
-            ])
-                ->addViolation();
-        } else {
-            $this->context->buildViolation($this->messageWithBrand, [
-                '{{ name }}' => $value,
-                '{{ brand }}' => $brand->getName()
-            ])
-                ->addViolation();
-        }
-    }
-    */
 }

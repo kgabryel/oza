@@ -9,19 +9,19 @@ use App\Field\MultiSelect;
 use App\Form\UserForm;
 use App\Model\Filter\Unit;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UnitFindForm extends UserForm
 {
     private array $units;
 
-    public function __construct(UnitRepository $unitRepository, TokenStorageInterface $tokenStorage)
+    public function __construct(UnitRepository $unitRepository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->units = $unitRepository->findBy([
             'user' => $this->user,
             'main' => null

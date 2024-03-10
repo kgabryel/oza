@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DeleteQuickListsCommand extends Command
 {
-    private const NAME = 'deleteQuickLists';
     private EntityManagerInterface $entityManager;
     private ListRepository $listRepository;
 
@@ -24,7 +23,7 @@ class DeleteQuickListsCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME);
+        $this->setName('deleteQuickLists');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -20,13 +20,13 @@ class ProductFactory extends EntityFactory
         /** @var ProductModel $data */
         $data = $form->getData();
         $product = new Product();
-        $product->setUser($this->user);
-        $product->setName($data->getName());
-        $product->setNote($data->getNote());
-        $product->setUnit($data->getUnit());
-        $product->setDefaultAmount($data->getDefaultAmount());
-        $product->setBrand($data->getBrand());
-        $product->setBarcode($data->getBarcode());
+        $product->setUser($this->user)
+            ->setName($data->getName())
+            ->setNote($data->getNote())
+            ->setUnit($data->getUnit())
+            ->setDefaultAmount($data->getDefaultAmount())
+            ->setBrand($data->getBrand())
+            ->setBarcode($data->getBarcode());
         foreach ($data->getProductsGroups() as $productsGroup) {
             $product->addGroup($productsGroup);
         }

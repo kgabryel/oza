@@ -9,6 +9,7 @@ use App\Field\MaterialDate;
 use App\Field\ShoppingPosition;
 use App\Model\Form\Shopping;
 use App\Repository\ShopRepository;
+use App\Services\UserService;
 use App\Validator\CorrectUnit\CorrectUnit;
 use App\Validator\PositionExists\PositionExists;
 use DateTime;
@@ -16,16 +17,15 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ShoppingForm extends UserForm
 {
     private array $shops;
 
-    public function __construct(ShopRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(ShopRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->shops = $repository->findForUser($this->user);
     }
 

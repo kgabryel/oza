@@ -54,6 +54,7 @@ class ProductRepository extends ServiceEntityRepository implements FilterForUser
             $builder->andWhere('e.brand in (:brands)')
                 ->setParameter('brands', $product->getBrands());
         }
+
         return $builder->getQuery()->getResult();
     }
 

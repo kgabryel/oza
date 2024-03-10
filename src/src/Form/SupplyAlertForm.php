@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Config\Form\SupplyAlertConfig;
 use App\Config\Message\Error\SupplyAlertErrors;
 use App\Entity\Alert as AlertEntity;
+use App\Entity\Supply;
 use App\Entity\Unit;
 use App\Model\Form\SupplyAlert;
 use App\Repository\SupplyAlertRepository;
@@ -35,6 +36,7 @@ class SupplyAlertForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Supply $supply */
         $supply = $this->supplyRepository->find($options['id']);
         $units = UnitUtils::getUnitList($supply->getGroup()->getUnit());
         $builder->add('alert', EntityType::class, [
@@ -62,7 +64,7 @@ class SupplyAlertForm extends AbstractType
                         'value' => 0,
                         'message' => SupplyAlertErrors::AMOUNT_TOO_SMALL
                     ]),
-                    new Callback(function ($value, ExecutionContext $context) use ($options) {
+                    new Callback(function($value, ExecutionContext $context) use ($options) {
                         $validator = new UniqueSupplyAmount($context, $options['id'], $this->supplyAlertRepository);
                         $validator->validate($value);
                     })

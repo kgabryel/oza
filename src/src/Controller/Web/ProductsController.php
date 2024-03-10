@@ -44,12 +44,12 @@ final class ProductsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $product = $productService->getProduct();
-        $editViewData->addEntity($product);
         $form = $this->createForm(EditProductForm::class, EditProduct::fromEntity($product), [
             'method' => Request::METHOD_PUT,
             'id' => $product->getId()
         ]);
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($product);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -78,8 +78,8 @@ final class ProductsController extends BaseController
         if ($productService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addForm($form);
-        $editViewData->addEntity($product);
+        $editViewData->addForm($form)
+            ->addEntity($product);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

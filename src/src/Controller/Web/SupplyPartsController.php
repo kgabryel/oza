@@ -67,8 +67,8 @@ final class SupplyPartsController extends BaseController
             'supply' => $supplyPart->getSupply(),
             'method' => Request::METHOD_PUT
         ]);
-        $viewData->addEntity($supplyPart);
-        $viewData->addSupplyPartForm($supplyPartForm);
+        $viewData->addEntity($supplyPart)
+            ->addSupplyPartForm($supplyPartForm);
 
         return $this->render(self::EDIT_TEMPLATE, $viewData->getOptions());
     }
@@ -100,10 +100,10 @@ final class SupplyPartsController extends BaseController
         $editForm = $this->createForm(EditSupplyForm::class, null, [
             'method' => Request::METHOD_PUT
         ]);
-        $editViewData->addEntity($supply);
-        $editViewData->addEditForm($editForm);
-        $editViewData->addAlertForm($alertForm);
-        $editViewData->addSupplyPartForm($supplyPartForm);
+        $editViewData->addEntity($supply)
+            ->addEditForm($editForm)
+            ->addAlertForm($alertForm)
+            ->addSupplyPartForm($supplyPartForm);
 
         return $this->render(SuppliesController::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -124,8 +124,8 @@ final class SupplyPartsController extends BaseController
         if ($this->supplyPartService->update($supplyPartForm, $this->request, $externalSuppliesService)) {
             return $this->redirectToSupply();
         }
-        $viewData->addEntity($supplyPart);
-        $viewData->addSupplyPartForm($supplyPartForm);
+        $viewData->addEntity($supplyPart)
+            ->addSupplyPartForm($supplyPartForm);
 
         return $this->render(self::EDIT_TEMPLATE, $viewData->getOptions());
     }

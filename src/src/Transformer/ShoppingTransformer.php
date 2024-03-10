@@ -19,15 +19,12 @@ class ShoppingTransformer implements DataTransformerInterface
         $this->factory = $factory;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function reverseTransform($value)
+    public function reverseTransform(mixed $value): ShoppingPosition
     {
         return new ShoppingPosition($value, $this->factory);
     }
 
-    public function transform($value): array
+    public function transform(mixed $value): array
     {
         if (null === $value) {
             return [

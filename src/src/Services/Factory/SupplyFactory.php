@@ -21,8 +21,8 @@ class SupplyFactory extends EntityFactory
         /** @var SupplyModel $data */
         $data = $form->getData();
         $supply = new Supply();
-        $supply->setGroup($data->getProductsGroup());
-        $supply->setDescription($data->getDescription());
+        $supply->setGroup($data->getProductsGroup())
+            ->setDescription($data->getDescription());
         foreach ($data->getSupplyGroups() as $supplyGroup) {
             $supply->addSupplyGroup($supplyGroup);
         }

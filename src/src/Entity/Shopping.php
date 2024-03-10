@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\PositionDto;
 use App\Repository\ShoppingRepository;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,10 +59,6 @@ class Shopping
      */
     private User $user;
 
-    public function __construct()
-    {
-    }
-
     public function getAmount(): float
     {
         return $this->amount;
@@ -115,9 +112,9 @@ class Shopping
         return $this;
     }
 
-    public function getPosition(): ProductsGroup|Product
+    public function getPosition(): PositionDto
     {
-        return $this->group ?? $this->product;
+        return new PositionDto($this);
     }
 
     public function getPrice(): float
@@ -178,15 +175,5 @@ class Shopping
         $this->user = $user;
 
         return $this;
-    }
-
-    public function isGroup(): bool
-    {
-        return $this->group !== null;
-    }
-
-    public function isProduct(): bool
-    {
-        return $this->product !== null;
     }
 }

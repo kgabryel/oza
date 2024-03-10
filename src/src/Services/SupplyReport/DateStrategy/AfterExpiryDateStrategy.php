@@ -16,7 +16,7 @@ class AfterExpiryDateStrategy extends DateStrategy
 
     public function get(): string
     {
-        $interval = abs($this->date->diff(new DateTime())->days);
+        $interval = abs((int)$this->date->diff(new DateTime())->days);
         $date = $this->date->format('d-m-Y');
         if ($interval > 1) {
             return sprintf('%s (%s dni po terminie)', $date, $interval);

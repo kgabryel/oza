@@ -41,9 +41,8 @@ class ShoppingListPositionTransformer
     {
         return [
             'id' => $position->getId(),
-            'type' => $position->getProduct() !== null ? 'product' : 'productsGroup',
-            'position' => $position->getProduct() !== null ? $position->getProduct()->getId()
-                : $position->getGroup()->getId(),
+            'type' => $position->getValue()->isProduct() ? 'product' : 'productsGroup',
+            'position' => $position->getValue()->getValue()->getId(),
             'amount' => $position->getUnitValue(),
             'unit' => $position->getUnit(),
             'shop' => $position->getShop(),

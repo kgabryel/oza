@@ -6,10 +6,10 @@ use App\Controller\Web\AlertsController;
 use App\Form\Filters\AlertFindForm;
 use App\Model\Filter\Alert;
 use App\Repository\AlertRepository;
+use App\Services\UserService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AlertFilter extends Filter
 {
@@ -17,19 +17,18 @@ class AlertFilter extends Filter
         FormFactoryInterface $factory,
         RequestStack $stack,
         AlertRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct(
             $factory,
             $stack,
-            $repository,
-            $tokenStorage,
+            $userService,
             $router,
             AlertFindForm::class,
             AlertsController::INDEX_URL
         );
         $data = $this->form->getData() ?? new Alert();
-        $this->results = $this->repository->filter($this->user, $data);
+        $this->results = $repository->filter($this->user, $data);
     }
 }

@@ -101,6 +101,7 @@ class Product implements Stringable
         if ($this->brand === null) {
             return $this->name;
         }
+
         return sprintf('%s [%s]', $this->name, $this->brand->getName());
     }
 
@@ -325,10 +326,7 @@ class Product implements Stringable
 
     public function removeClipboardPosition(ClipboardPosition $clipboardPosition): self
     {
-        if (
-            $this->clipboardPositions->removeElement($clipboardPosition)
-            && $clipboardPosition->getProduct() === $this
-        ) {
+        if ($this->clipboardPositions->removeElement($clipboardPosition)) {
             $clipboardPosition->setProduct(null);
         }
 
@@ -337,8 +335,7 @@ class Product implements Stringable
 
     public function removeGroup(ProductsGroup $group): self
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
+        if ($this->groups->removeElement($group)) {
             $group->removeProduct($this);
         }
 
@@ -348,10 +345,7 @@ class Product implements Stringable
     public function removePhoto(Photo $photo): self
     {
         if ($this->photos->removeElement($photo)) {
-            // set the owning side to null (unless already changed)
-            if ($photo->getProduct() === $this) {
-                $photo->setProduct(null);
-            }
+            $photo->setProduct(null);
         }
 
         return $this;
@@ -359,12 +353,8 @@ class Product implements Stringable
 
     public function removePosition(Position $position): self
     {
-        if ($this->positions->contains($position)) {
-            $this->positions->removeElement($position);
-            // set the owning side to null (unless already changed)
-            if ($position->getProduct() === $this) {
-                $position->setProduct(null);
-            }
+        if ($this->positions->removeElement($position)) {
+            $position->setProduct(null);
         }
 
         return $this;
@@ -372,12 +362,8 @@ class Product implements Stringable
 
     public function removeShopping(Shopping $shopping): self
     {
-        if ($this->shopping->contains($shopping)) {
-            $this->shopping->removeElement($shopping);
-            // set the owning side to null (unless already changed)
-            if ($shopping->getProduct() === $this) {
-                $shopping->setProduct(null);
-            }
+        if ($this->shopping->removeElement($shopping)) {
+            $shopping->setProduct(null);
         }
 
         return $this;
@@ -385,7 +371,7 @@ class Product implements Stringable
 
     public function removeSupplyPart(SupplyPart $supplyPart): self
     {
-        if ($this->supplyParts->removeElement($supplyPart) && $supplyPart->getProduct() === $this) {
+        if ($this->supplyParts->removeElement($supplyPart)) {
             $supplyPart->setProduct(null);
         }
 

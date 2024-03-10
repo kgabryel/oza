@@ -44,7 +44,7 @@ class SupplyPart
 
     public function getDescription(): string
     {
-        return $this->supplyPart->getDescription() ?? '';
+        return $this->supplyPart->getDescription();
     }
 
     public function getProduct(bool $withGroup = true): string

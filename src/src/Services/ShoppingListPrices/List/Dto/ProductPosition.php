@@ -21,6 +21,6 @@ class ProductPosition
 
     public function getProduct(): Product
     {
-        return $this->position->getProduct();
+        return $this->position->getValue()->getProduct();
     }
 }

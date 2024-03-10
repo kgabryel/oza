@@ -5,21 +5,21 @@ namespace App\ViewData\Home;
 use App\Config\ViewParameters;
 use App\Repository\AlertRepository;
 use App\Repository\NoteRepository;
+use App\Services\UserService;
 use App\ViewData\ViewData;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class IndexViewData extends ViewData
 {
     public function __construct(
         AlertRepository $alertRepository,
         NoteRepository $noteRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SessionInterface $session
     ) {
         parent::__construct($session);
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->options[ViewParameters::NOTES] = $noteRepository->findBy(['user' => $user], ['id' => 'DESC']);
         $this->options[ViewParameters::ALERTS] = $alertRepository->findBy(
             ['user' => $user, 'isActive' => true],

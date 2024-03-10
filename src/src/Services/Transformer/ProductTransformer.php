@@ -39,6 +39,7 @@ class ProductTransformer
         if ($photo !== null) {
             $data['photo'] = PhotoTransformer::toArray($photo);
         }
+
         return $data;
     }
 
@@ -58,6 +59,7 @@ class ProductTransformer
                 'supplies' => []
             ];
         }
+
         return [
             'available' => true,
             'supplies' => $groups

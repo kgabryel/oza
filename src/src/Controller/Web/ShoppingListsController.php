@@ -35,25 +35,25 @@ final class ShoppingListsController extends BaseController
         if (!$productsListService->find($id)) {
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
-        $formViewData->addForm(
-            $this->createForm(
-                ShoppingListForm::class,
-                ShoppingList::fromEntity($productsListService->getList(), $listPositionTransformer),
-                ['method' => Request::METHOD_PUT]
-            )
-        );
-        $formViewData->addId($id);
+        $formViewData->addId($id)
+            ->addForm(
+                $this->createForm(
+                    ShoppingListForm::class,
+                    ShoppingList::fromEntity($productsListService->getList(), $listPositionTransformer),
+                    ['method' => Request::METHOD_PUT]
+                )
+            );
 
         return $this->render(self::EDIT_TEMPLATE, $formViewData->getOptions());
     }
 
     public function showCreate(FormViewData $listsFormViewData, ShoppingListPosition $position): Response
     {
-        $listsFormViewData->addEmptyPosition();
         $model = new ShoppingList();
         $model->setPositions([$position]);
         $form = $this->createForm(ShoppingListForm::class);
-        $listsFormViewData->addForm($form);
+        $listsFormViewData->addForm($form)
+            ->addEmptyPosition();
 
         return $this->render(self::ADD_TEMPLATE, $listsFormViewData->getOptions());
     }
@@ -86,8 +86,8 @@ final class ShoppingListsController extends BaseController
         if ($productsListService->update($form, $this->request, $shoppingListPositionFactory)) {
             return $this->redirect($this->generateUrl(self::INDEX_URL));
         }
-        $listsFormViewData->addForm($form);
-        $listsFormViewData->addId($id);
+        $listsFormViewData->addForm($form)
+            ->addId($id);
 
         return $this->render(self::EDIT_TEMPLATE, $listsFormViewData->getOptions());
     }

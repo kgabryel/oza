@@ -7,11 +7,11 @@ use App\Config\Message\Error\ShopErrors;
 use App\Field\Wysiwyg;
 use App\Model\Form\Shop;
 use App\Repository\ShopRepository;
+use App\Services\UserService;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -20,9 +20,9 @@ class ShopForm extends UserForm
 {
     private ShopRepository $repository;
 
-    public function __construct(ShopRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(ShopRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->repository = $repository;
     }
 
@@ -45,13 +45,12 @@ class ShopForm extends UserForm
                     'max' => ShopConfig::NAME_MAX_LENGTH,
                     'maxMessage' => ShopErrors::NAME_TOO_LONG
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->repository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::EXPECT_OPTION => $options['expect'],
-                    UniqueForUser::MESSAGE_OPTION => ShopErrors::SHOP_IN_USE
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    ShopErrors::SHOP_IN_USE,
+                    $this->repository,
+                    expect: $options['expect']
+                )
             ]
         ])
             ->add('description', Wysiwyg::class, [

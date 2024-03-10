@@ -11,12 +11,12 @@ class ClipboardPositionFactory extends EntityFactory
     public function create(Position $position): void
     {
         $clipboardPosition = new ClipboardPosition();
-        $clipboardPosition->setUser($this->user);
-        $clipboardPosition->setProduct($position->getProduct());
-        $clipboardPosition->setGroup($position->getGroup());
-        $clipboardPosition->setUnit($position->getUnit());
-        $clipboardPosition->setAmount($position->getUnitValue());
-        $clipboardPosition->setDescription($position->getDescription());
+        $clipboardPosition->setUser($this->user)
+            ->setProduct($position->getProduct())
+            ->setGroup($position->getGroup())
+            ->setUnit($position->getUnit())
+            ->setAmount($position->getUnitValue())
+            ->setDescription($position->getDescription());
         $this->entityManager->persist($clipboardPosition);
     }
 }

@@ -307,36 +307,28 @@ class Unit implements Stringable
 
     public function removeGroup(ProductsGroup $group): self
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-        }
+        $this->groups->removeElement($group);
 
         return $this;
     }
 
     public function removeListPosition(Position $listPosition): self
     {
-        if ($this->listPositions->contains($listPosition)) {
-            $this->listPositions->removeElement($listPosition);
-        }
+        $this->listPositions->removeElement($listPosition);
 
         return $this;
     }
 
     public function removeProduct(Product $product): self
     {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }
 
     public function removeShopping(Shopping $shopping): self
     {
-        if ($this->shopping->contains($shopping)) {
-            $this->shopping->removeElement($shopping);
-        }
+        $this->shopping->removeElement($shopping);
 
         return $this;
     }
@@ -357,12 +349,8 @@ class Unit implements Stringable
 
     public function removeUnit(self $unit): self
     {
-        if ($this->units->contains($unit)) {
-            $this->units->removeElement($unit);
-            // set the owning side to null (unless already changed)
-            if ($unit->getMain() === $this) {
-                $unit->setMain(null);
-            }
+        if ($this->units->removeElement($unit)) {
+            $unit->setMain(null);
         }
 
         return $this;

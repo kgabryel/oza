@@ -15,10 +15,10 @@ use App\Repository\ProductRepository;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\ShopRepository;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShoppingFindForm extends UserForm
 {
@@ -32,9 +32,9 @@ class ShoppingFindForm extends UserForm
         ShopRepository $shopRepository,
         ProductsGroupRepository $productsGroupRepository,
         ProductRepository $productRepository,
-        TokenStorageInterface $tokenStorage
+        UserService $userService
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->units = $repository->findForUser($this->user);
         $this->shops = $shopRepository->findForUser($this->user);
         $this->products = $productRepository->findForUser($this->user);

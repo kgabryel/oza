@@ -39,7 +39,7 @@ class SupplyAlertsService
     }
 
     /**
-     * @param SupplyAlert[] $alerts
+     * @param  SupplyAlert[]  $alerts
      *
      * @return $this
      */
@@ -55,15 +55,12 @@ class SupplyAlertsService
         if ($this->alerts === []) {
             return $this;
         }
-        $baseUnit = $this->alerts[0]->getUnit();
-        if ($baseUnit->getMain() !== null) {
-            $baseUnit = $baseUnit->getMain();
-        }
+        $baseUnit = $this->alerts[0]->getUnit()->getMain() ?? $this->alerts[0]->getUnit();
         $values = [];
         foreach ($this->alerts as $key => $alert) {
             $values[] = new AlertAmount($key, $alert, $baseUnit);
         }
-        usort($values, static fn($a, $b): int => $a->getAmount <=> $b->getAmount());
+        usort($values, static fn(AlertAmount $a, AlertAmount $b): int => $a->getAmount() <=> $b->getAmount());
         $tmp = $this->alerts;
         $this->alerts = array_map(static fn(AlertAmount $amount) => $tmp[$amount->getIndex()], $values);
 

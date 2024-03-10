@@ -22,10 +22,11 @@ pipeline {
 
         stage('deploy') {
             steps {
-                sh 'cp -r -f /var/www/html/oza/var/files src/var/files'
+                sh 'sudo cp -r -f /var/www/html/oza/var/files src/var/files'
+                sh 'sudo cp -r -f /var/www/html/oza/var/sessions src/var/sessions'
                 sh 'cd src && rm -rf node_modules'
                 sh 'sudo rm -rf /var/www/html/oza'
-                sh 'cp -r -f src /var/www/html/oza'
+                sh 'sudo cp -r -f src /var/www/html/oza'
                 sh 'sudo chmod 755 -R /var/www/html/oza'
                 sh 'sudo chown www-data -R /var/www/html/oza'
             }

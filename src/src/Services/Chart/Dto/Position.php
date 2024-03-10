@@ -28,9 +28,9 @@ class Position implements JsonSerializable
         return $this->date;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        $this->toArray();
+        return $this->toArray();
     }
 
     public function toArray(): array

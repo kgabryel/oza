@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\ApiKey;
 use App\Model\Form\ApiKeyDescription;
 use App\Repository\ApiKeyRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ApiKeyService extends EntityService
 {
@@ -21,10 +21,10 @@ class ApiKeyService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ApiKeyRepository $apiKeyRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->apiKeyRepository = $apiKeyRepository;
     }
 

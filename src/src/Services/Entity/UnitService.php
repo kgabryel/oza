@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\Unit;
 use App\Model\Form\EditUnit;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UnitService extends EntityService
 {
@@ -21,10 +21,10 @@ class UnitService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         UnitRepository $unitRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->unitRepository = $unitRepository;
     }
 
@@ -59,8 +59,8 @@ class UnitService extends EntityService
         }
         /** @var EditUnit $data */
         $data = $form->getData();
-        $this->unit->setName($data->getName());
-        $this->unit->setShortcut($data->getShortcut());
+        $this->unit->setName($data->getName())
+            ->setShortcut($data->getShortcut());
         $this->saveEntity($this->unit);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, UnitMessages::UPDATE_CORRECT);
 

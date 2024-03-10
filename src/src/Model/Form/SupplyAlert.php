@@ -9,7 +9,7 @@ use App\Entity\Unit;
 class SupplyAlert
 {
     private ?AlertEntity $alert;
-    private ?float $amount;
+    private float $amount;
     private ?Supply $supply;
     private ?Unit $unit;
 

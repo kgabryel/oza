@@ -8,6 +8,7 @@ use App\Entity\Unit;
 use App\Repository\SupplyRepository;
 use App\Repository\UnitRepository;
 use App\Services\PositionFactory\PositionFactory;
+use App\Services\UserService;
 use App\Transformer\ShoppingTransformer;
 use App\Validator\GreaterThanOrEqual;
 use App\Validator\ValidShoppingSupply;
@@ -17,7 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -31,12 +31,12 @@ class ShoppingPosition extends AbstractType
 
     public function __construct(
         UnitRepository $unitRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         PositionFactory $factory,
         SupplyRepository $supplyRepository
     ) {
         $this->factory = $factory;
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->units = $unitRepository->findForUser($user);
         $this->supplies = $supplyRepository->findForUser($user);
     }
@@ -62,8 +62,12 @@ class ShoppingPosition extends AbstractType
                     new Positive([
                         'message' => ShoppingErrors::DISCOUNT_TOO_SMALL
                     ]),
-                    new Callback(function ($value, ExecutionContext $context) {
-                        $validator = new GreaterThanOrEqual($context, 'price', ShoppingErrors::DISCOUNT_INVALID);
+                    new Callback(function($value, ExecutionContext $context) {
+                        $validator = new GreaterThanOrEqual(
+                            $context,
+                            'price',
+                            ShoppingErrors::DISCOUNT_INVALID
+                        );
                         $validator->validate($value);
                     })
                 ],
@@ -97,7 +101,7 @@ class ShoppingPosition extends AbstractType
                 'class' => Supply::class,
                 'invalid_message' => ShoppingErrors::INVALID_SUPPLY,
                 'constraints' => [
-                    new Callback(function ($value, ExecutionContext $context) {
+                    new Callback(function($value, ExecutionContext $context) {
                         $validator = new ValidShoppingSupply($context, $this->factory);
                         $validator->validate($value);
                     })

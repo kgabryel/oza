@@ -21,6 +21,6 @@ class ProductsGroupPosition
 
     public function getProductsGroup(): ProductsGroup
     {
-        return $this->position->getGroup();
+        return $this->position->getValue()->getProductsGroup();
     }
 }

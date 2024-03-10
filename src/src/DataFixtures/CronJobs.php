@@ -3,11 +3,17 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ObjectManager;
 
 class CronJobs extends Fixture
 {
+    /**
+     * @param  EntityManagerInterface  $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $jobs = [
@@ -29,7 +35,7 @@ class CronJobs extends Fixture
         }
     }
 
-    private function create(array $data, ObjectManager $manager): void
+    private function create(array $data, EntityManagerInterface $manager): void
     {
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('cnt', 'cnt');

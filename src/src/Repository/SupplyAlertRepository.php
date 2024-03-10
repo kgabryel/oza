@@ -36,7 +36,7 @@ class SupplyAlertRepository extends ServiceEntityRepository implements FindForUs
             ->getOneOrNullResult();
     }
 
-    public function findById($id, User $user): ?SupplyAlert
+    public function findById(int $id, User $user): ?SupplyAlert
     {
         return $this->createQueryBuilder('e')
             ->select('e')
@@ -50,7 +50,7 @@ class SupplyAlertRepository extends ServiceEntityRepository implements FindForUs
     }
 
     /**
-     * @param int $supply
+     * @param  int  $supply
      *
      * @return SupplyAlert[]
      */

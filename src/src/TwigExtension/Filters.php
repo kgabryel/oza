@@ -7,7 +7,9 @@ use App\Config\Message\Error\ShoppingListErrors;
 use App\Entity\ApiKey;
 use ArrayAccess;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ReadableCollection;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormView;
 use Twig\Extension\AbstractExtension;
@@ -15,7 +17,7 @@ use Twig\TwigFilter;
 
 class Filters extends AbstractExtension
 {
-    public function applicationKeys(Collection $keys, ?string $application = null): Collection
+    public function applicationKeys(Collection $keys, ?string $application = null): ReadableCollection
     {
         if ($application === null) {
             return $keys->filter(static fn(ApiKey $key): bool => $key->getApplication() === null);
@@ -32,6 +34,7 @@ class Filters extends AbstractExtension
     public function errorMessages(FormErrorIterator $errors): array
     {
         $messages = [];
+        /** @var FormError $error */
         foreach ($errors as $error) {
             $messages[] = $error->getMessage();
         }
@@ -78,7 +81,7 @@ class Filters extends AbstractExtension
     }
 
     /**
-     * @param ChoiceView[] $choices
+     * @param  ChoiceView[]  $choices
      *
      * @return array
      */
@@ -94,16 +97,15 @@ class Filters extends AbstractExtension
 
     public function quickListPositions(FormView $positions, bool $addEmptyPosition = false): array
     {
+        $keys = [
+            'checked' => 'checked',
+            'position' => 'value'
+        ];
         $values = [];
         /** @var FormView $position */
         foreach ($positions as $position) {
             $element = [];
-            foreach (
-                [
-                    'checked' => 'checked',
-                    'position' => 'value'
-                ] as $key => $valueKey
-            ) {
+            foreach ($keys as $key => $valueKey) {
                 $element[$key] = self::mapPosition($position, $key, $valueKey);
             }
             $values[] = $element;
@@ -222,7 +224,11 @@ class Filters extends AbstractExtension
                 $productErrors[] = $error->getMessage();
             }
             array_push($productErrors, ...self::parseErrors($position, 'position'));
-            $productValue = sprintf('%s_%s', $position['type']->vars['value'], $position['position']->vars['value']);
+            $productValue = sprintf(
+                '%s_%s',
+                $position['type']->vars['value'],
+                $position['position']->vars['value']
+            );
             if (isset($errors[$key])) {
                 if ($errors[$key] === ShoppingErrors::UNIT_MISSING) {
                     $unitErrors[] = $errors[$key];

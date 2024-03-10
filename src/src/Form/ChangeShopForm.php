@@ -6,18 +6,18 @@ use App\Config\Message\Error\ShoppingListErrors;
 use App\Entity\Shop;
 use App\Model\Form\ChangeShop;
 use App\Repository\ShopRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ChangeShopForm extends UserForm
 {
     private array $shops;
 
-    public function __construct(ShopRepository $shopRepository, TokenStorageInterface $tokenStorage)
+    public function __construct(ShopRepository $shopRepository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->shops = $shopRepository->findForUser($this->user);
     }
 

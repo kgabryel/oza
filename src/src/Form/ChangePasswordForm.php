@@ -6,6 +6,7 @@ use App\Config\Form\RegisterConfig;
 use App\Config\Form\ResetPasswordConfig;
 use App\Config\Message\Error\RegisterErrors;
 use App\Model\Form\ChangePassword;
+use App\Services\UserService;
 use App\Validator\CorrectPassword\CorrectPassword;
 use App\Validator\DifferentPassword;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -13,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -24,9 +24,9 @@ class ChangePasswordForm extends UserForm
 {
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(TokenStorageInterface $tokenStorage, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserService $userService, UserPasswordHasherInterface $userPasswordHasher)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
@@ -42,10 +42,10 @@ class ChangePasswordForm extends UserForm
                     'type' => 'string',
                     'message' => RegisterErrors::INVALID_VALUE
                 ]),
-                new CorrectPassword([
-                    CorrectPassword::USER_OPTION => $this->user,
-                    CorrectPassword::PASSWORD_HASHER_OPTION => $this->userPasswordHasher
-                ])
+                new CorrectPassword(
+                    $this->user,
+                    $this->userPasswordHasher
+                )
             ]
         ])
             ->add('newPassword', RepeatedType::class, [
@@ -62,7 +62,7 @@ class ChangePasswordForm extends UserForm
                         'max' => RegisterConfig::PASSWORD_MAX_LENGTH,
                         'maxMessage' => RegisterErrors::PASSWORD_TOO_LONG
                     ]),
-                    new Callback(function ($value, ExecutionContext $context) {
+                    new Callback(function($value, ExecutionContext $context) {
                         $validator = new DifferentPassword($context);
                         $validator->validate($value);
                     })

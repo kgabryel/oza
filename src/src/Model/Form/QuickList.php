@@ -65,7 +65,7 @@ class QuickList
     }
 
     /**
-     * @param QuickListPosition[] $positions
+     * @param  QuickListPosition[]  $positions
      */
     public function setPositions(array $positions): void
     {

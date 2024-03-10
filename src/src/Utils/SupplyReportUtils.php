@@ -40,7 +40,7 @@ class SupplyReportUtils
 
     public static function sort(array $suppliesParts): void
     {
-        usort($suppliesParts, static function (SupplyPart $a, SupplyPart $b): int {
+        usort($suppliesParts, static function(SupplyPart $a, SupplyPart $b): int {
             $aDate = $a->getDateOfConsumption();
             $bDate = $b->getDateOfConsumption();
             if ($aDate === null && $bDate === null) {

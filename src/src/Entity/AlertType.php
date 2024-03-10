@@ -92,9 +92,7 @@ class AlertType implements Stringable
 
     public function removeAlert(Alert $alert): self
     {
-        if ($this->alerts->contains($alert)) {
-            $this->alerts->removeElement($alert);
-        }
+        $this->alerts->removeElement($alert);
 
         return $this;
     }

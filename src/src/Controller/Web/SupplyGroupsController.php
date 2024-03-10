@@ -42,12 +42,12 @@ final class SupplyGroupsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $supplyGroup = $supplyGroupService->getSupplyGroup();
-        $editViewData->addEntity($supplyGroup);
         $form = $this->createForm(SupplyGroupForm::class, SupplyGroupModel::fromEntity($supplyGroup), [
             'method' => Request::METHOD_PUT,
             'expect' => $supplyGroup->getId()
         ]);
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($supplyGroup);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -76,8 +76,8 @@ final class SupplyGroupsController extends BaseController
         if ($supplyGroupService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addEntity($supplyGroup);
-        $editViewData->addForm($form);
+        $editViewData->addEntity($supplyGroup)
+            ->addForm($form);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

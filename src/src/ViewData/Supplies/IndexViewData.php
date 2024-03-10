@@ -13,12 +13,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class IndexViewData extends BasicIndexViewData
 {
-    public function __construct(
-        SessionInterface $session,
-        SupplyFilter $filter
-    ) {
+    public function __construct(SessionInterface $session, SupplyFilter $filter)
+    {
         parent::__construct($session, $filter, TableName::SUPPLIES_NAME, TableId::SUPPLIES);
-
         $this->options[ViewParameters::ENTITIES] = array_map(
             static fn(Supply $supply) => SupplyTransformer::toArray($supply),
             $filter->getResults()

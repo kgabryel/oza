@@ -53,7 +53,7 @@ class Set implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $filtered = array_filter($this->positions, static fn(array $positions): bool => count($positions) > 0);
+        $filtered = array_filter($this->positions, static fn(array $positions): bool => !empty($positions));
         $sets = [];
         foreach ($filtered as $positions) {
             $shop = $positions[0]->getShop();

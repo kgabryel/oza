@@ -20,9 +20,9 @@ class UnitFactory extends EntityFactory
         /** @var UnitModel $data */
         $data = $form->getData();
         $unit = new Unit();
-        $unit->setUser($this->user);
-        $unit->setName($data->getName());
-        $unit->setShortcut($data->getShortcut());
+        $unit->setUser($this->user)
+            ->setName($data->getName())
+            ->setShortcut($data->getShortcut());
         if (!$data->getIsMainUnit()) {
             $unit->setConverter($data->getConverter());
             $unit->setMain($data->getMainUnit());

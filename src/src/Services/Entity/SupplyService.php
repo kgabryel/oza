@@ -8,11 +8,11 @@ use App\Entity\Supply;
 use App\Model\Form\EditSupply;
 use App\Repository\SupplyRepository;
 use App\Services\ExternalSuppliesService;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyService extends EntityService
 {
@@ -22,10 +22,10 @@ class SupplyService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyRepository $supplyRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->supplyRepository = $supplyRepository;
     }
 
@@ -64,8 +64,8 @@ class SupplyService extends EntityService
         }
         /** @var EditSupply $data */
         $data = $form->getData();
-        $this->supply->setDescription($data->getDescription());
-        $this->supply->clearGroups();
+        $this->supply->setDescription($data->getDescription())
+            ->clearGroups();
         foreach ($data->getSupplyGroups() as $group) {
             $this->supply->addSupplyGroup($group);
         }

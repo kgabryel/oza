@@ -5,9 +5,9 @@ namespace App\Services\Entity;
 use App\Entity\QuickList\Position;
 use App\Entity\QuickList\QuickList;
 use App\Repository\QuickList\PositionRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class QuickListPositionService extends EntityService
 {
@@ -17,10 +17,10 @@ class QuickListPositionService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         PositionRepository $positionRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->positionRepository = $positionRepository;
     }
 

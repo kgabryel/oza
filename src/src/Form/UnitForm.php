@@ -8,6 +8,7 @@ use App\Entity\Unit as UnitEntity;
 use App\Field\MaterialSwitch;
 use App\Model\Form\Unit;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -15,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -28,9 +28,9 @@ class UnitForm extends UserForm
     private UnitRepository $unitRepository;
     private array $units;
 
-    public function __construct(UnitRepository $unitRepository, TokenStorageInterface $tokenStorage)
+    public function __construct(UnitRepository $unitRepository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->unitRepository = $unitRepository;
         $this->units = $this->unitRepository->findBy([
             'user' => $this->user,
@@ -60,13 +60,12 @@ class UnitForm extends UserForm
                     'maxMessage' => UnitErrors::NAME_TOO_LONG,
                     'groups' => self::ALL_UNIT_GROUPS
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->unitRepository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::MESSAGE_OPTION => UnitErrors::NAME_IN_USE,
-                    'groups' => self::ALL_UNIT_GROUPS
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    UnitErrors::NAME_IN_USE,
+                    $this->unitRepository,
+                    options: ['groups' => self::ALL_UNIT_GROUPS]
+                )
             ]
         ])
             ->add('shortcut', TextType::class, [
@@ -89,13 +88,13 @@ class UnitForm extends UserForm
                         'maxMessage' => UnitErrors::SHORTCUT_TOO_LONG,
                         'groups' => self::ALL_UNIT_GROUPS
                     ]),
-                    new UniqueForUser([
-                        UniqueForUser::USER_OPTION => $this->user,
-                        UniqueForUser::REPOSITORY_OPTION => $this->unitRepository,
-                        UniqueForUser::COLUMN_NAME_OPTION => 'shortcut',
-                        UniqueForUser::MESSAGE_OPTION => UnitErrors::SHORTCUT_IN_USE,
-                        'groups' => self::ALL_UNIT_GROUPS
-                    ])
+                    new UniqueForUser(
+                        $this->user,
+                        UnitErrors::SHORTCUT_IN_USE,
+                        $this->unitRepository,
+                        columnName: 'shortcut',
+                        options: ['groups' => self::ALL_UNIT_GROUPS]
+                    )
                 ]
             ])
             ->add('isMainUnit', MaterialSwitch::class, [
@@ -138,7 +137,7 @@ class UnitForm extends UserForm
     {
         $resolver->setDefaults([
             'data_class' => Unit::class,
-            'validation_groups' => function (FormInterface $form) {
+            'validation_groups' => function(FormInterface $form) {
                 /** @var Unit $data */
                 $data = $form->getData();
                 if (!$data->getIsMainUnit()) {

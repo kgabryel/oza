@@ -10,7 +10,9 @@ class UnitUtils
 {
     public static function checkUnit(?ProductsGroup $productsGroup, ?Product $product, Unit $unit): bool
     {
-        $u = $productsGroup !== null ? $productsGroup->getUnit() : $product->getUnit();
+        /** @var ProductsGroup|Product $position */
+        $position = $productsGroup ?? $product;
+        $u = $position->getUnit();
         $mainUnit = $u->getMain();
         if ($mainUnit !== null) {
             $u = $mainUnit;

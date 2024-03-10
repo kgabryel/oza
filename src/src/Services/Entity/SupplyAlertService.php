@@ -8,9 +8,9 @@ use App\Entity\Supply;
 use App\Entity\SupplyAlert;
 use App\Repository\SupplyAlertRepository;
 use App\Services\SupplyAlerts\SupplyAlertsService;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyAlertService extends EntityService
 {
@@ -20,10 +20,10 @@ class SupplyAlertService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyAlertRepository $alertRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->alertRepository = $alertRepository;
     }
 
@@ -60,6 +60,7 @@ class SupplyAlertService extends EntityService
     public function reactivate(?Supply $supply, SupplyAlertsService $alertsService): void
     {
         $supply ??= $this->alert->getSupply();
+        /** @var SupplyAlert $supplyAlert */
         foreach ($supply->getAlerts() as $supplyAlert) {
             $alert = $supplyAlert->getAlert();
             $alert->deactivate();

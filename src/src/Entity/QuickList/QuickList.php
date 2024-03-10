@@ -148,9 +148,7 @@ class QuickList
 
     public function removePosition(Position $position): self
     {
-        if ($this->positions->contains($position)) {
-            $this->positions->removeElement($position);
-        }
+        $this->positions->removeElement($position);
 
         return $this;
     }

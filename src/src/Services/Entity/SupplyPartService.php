@@ -8,12 +8,12 @@ use App\Entity\SupplyPart;
 use App\Model\Form\SupplyPart as SupplyPartModel;
 use App\Repository\SupplyPartRepository;
 use App\Services\ExternalSuppliesService;
+use App\Services\UserService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyPartService extends EntityService
 {
@@ -23,10 +23,10 @@ class SupplyPartService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyPartRepository $supplyPartRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->supplyPartRepository = $supplyPartRepository;
     }
 
@@ -72,12 +72,12 @@ class SupplyPartService extends EntityService
         }
         /** @var SupplyPartModel $data */
         $data = $form->getData();
-        $this->supplyPart->setAmount($data->getAmount());
-        $this->supplyPart->setDescription($data->getDescription() ?? '');
-        $this->supplyPart->setUnit($data->getUnit());
-        $this->supplyPart->setPart($data->getPart());
+        $this->supplyPart->setAmount($data->getAmount())
+            ->setDescription($data->getDescription() ?? '')
+            ->setUnit($data->getUnit())
+            ->setPart($data->getPart())
+            ->setProduct($data->getProduct());
         $data->isOpen() ? $this->supplyPart->open() : $this->supplyPart->close();
-        $this->supplyPart->setProduct($data->getProduct());
         $date = $data->getDateOfConsumption();
         if ($date !== null) {
             $this->supplyPart->setDateOfConsumption(DateTime::createFromFormat('Y-m-d', $date));

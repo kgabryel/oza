@@ -23,7 +23,11 @@ class Supply
 
     public function getAmount(): string
     {
-        return sprintf('%s %s', $this->supply->getAmount(), $this->supply->getGroup()->getBaseUnit()->getShortcut());
+        return sprintf(
+            '%s %s',
+            $this->supply->getAmount(),
+            $this->supply->getGroup()->getBaseUnit()->getShortcut()
+        );
     }
 
     public function getDescription(): string

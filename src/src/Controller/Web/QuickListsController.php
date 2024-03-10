@@ -35,19 +35,19 @@ final class QuickListsController extends BaseController
             QuickList::fromEntity($quickListService->getList()),
             ['method' => Request::METHOD_PUT]
         );
-        $formViewData->addForm($form);
-        $formViewData->addId($id);
+        $formViewData->addForm($form)
+            ->addId($id);
 
         return $this->render(self::EDIT_TEMPLATE, $formViewData->getOptions());
     }
 
     public function showCreate(FormViewData $formViewData): Response
     {
-        $formViewData->addEmptyPosition();
         $model = new QuickList();
         $model->setPositions([new QuickListPosition()]);
         $form = $this->createForm(QuickListForm::class, $model);
-        $formViewData->addForm($form);
+        $formViewData->addForm($form)
+            ->addEmptyPosition();
 
         return $this->render(self::SHOW_TEMPLATE, $formViewData->getOptions());
     }
@@ -82,8 +82,8 @@ final class QuickListsController extends BaseController
         if ($quickListService->update($form, $this->request, $positionFactory)) {
             return $this->redirect($this->generateUrl(self::INDEX_URL));
         }
-        $formViewData->addForm($form);
-        $formViewData->addId($id);
+        $formViewData->addForm($form)
+            ->addId($id);
 
         return $this->render(self::EDIT_TEMPLATE, $formViewData->getOptions());
     }

@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Product
 {
-    private ?string $barcode;
+    private string $barcode;
     private ArrayCollection $brands;
-    private ?string $name;
+    private string $name;
     private ArrayCollection $productsGroupUnits;
     private ArrayCollection $productsGroups;
     private ArrayCollection $units;

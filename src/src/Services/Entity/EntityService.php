@@ -3,9 +3,9 @@
 namespace App\Services\Entity;
 
 use App\Entity\User;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 abstract class EntityService
 {
@@ -16,11 +16,11 @@ abstract class EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        UserService $userService
     ) {
         $this->flashBag = $flashBag;
         $this->entityManager = $entityManager;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $userService->getUser();
     }
 
     abstract public function find(int $id): bool;

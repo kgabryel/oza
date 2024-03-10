@@ -4,6 +4,7 @@ namespace App\Services\SettingsStoreAction;
 
 use App\Services\Factory\ApiKeyFactory;
 use App\Services\SettingsService;
+use App\Services\UserService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -17,19 +18,22 @@ class SettingsStoreActionFactory
     private SettingsService $settingsService;
     private TokenStorageInterface $tokenStorage;
     private UserPasswordHasherInterface $userPasswordHasher;
+    private UserService $userService;
 
     public function __construct(
         SettingsService $settingsService,
         TokenStorageInterface $tokenStorage,
         UserPasswordHasherInterface $userPasswordHasher,
         UrlGeneratorInterface $router,
-        ApiKeyFactory $apiKeyFactory
+        ApiKeyFactory $apiKeyFactory,
+        UserService $userService
     ) {
         $this->settingsService = $settingsService;
         $this->tokenStorage = $tokenStorage;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->router = $router;
         $this->apiKeyFactory = $apiKeyFactory;
+        $this->userService = $userService;
     }
 
     public function get(
@@ -49,7 +53,8 @@ class SettingsStoreActionFactory
                 $this->tokenStorage,
                 $this->settingsService,
                 $this->userPasswordHasher,
-                $this->router
+                $this->router,
+                $this->userService
             );
         }
 

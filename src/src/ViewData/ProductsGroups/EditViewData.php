@@ -12,12 +12,12 @@ use App\Model\Filter\Shopping;
 use App\Repository\ShoppingRepository;
 use App\Services\Transformer\PhotoTransformer;
 use App\Services\Transformer\ShoppingTransformer;
+use App\Services\UserService;
 use App\ViewData\ViewData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EditViewData extends ViewData
 {
@@ -28,12 +28,12 @@ class EditViewData extends ViewData
     public function __construct(
         SessionInterface $session,
         ShoppingRepository $shoppingRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct($session);
         $this->shoppingRepository = $shoppingRepository;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $userService->getUser();
         $this->router = $router;
         $this->options[ViewParameters::LIMIT] = $session->get(Settings::PAGINATION_COUNT);
     }
@@ -57,7 +57,7 @@ class EditViewData extends ViewData
         );
         foreach ($productsGroup->getProducts() as $product) {
             foreach ($product->getPhotos() as $photo) {
-                $photos[] = PhotoTransformer::toArray($photo, $photo->getId() === $mainPhoto, false);
+                $photos[] = PhotoTransformer::toArray($photo, $photo->getId() === $mainPhoto);
             }
         }
         $this->options[ViewParameters::PHOTOS] = $photos;

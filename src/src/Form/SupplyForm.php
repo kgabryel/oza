@@ -10,10 +10,10 @@ use App\Field\Wysiwyg;
 use App\Model\Form\Supply;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\SupplyGroupRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SupplyForm extends UserForm
@@ -22,11 +22,11 @@ class SupplyForm extends UserForm
     private array $supplyGroups;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ProductsGroupRepository $productsGroupRepository,
         SupplyGroupRepository $supplyGroupRepository
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->productsGroups = $productsGroupRepository->findWithoutSupply($this->user);
         $this->supplyGroups = $supplyGroupRepository->findForUser($this->user);
     }

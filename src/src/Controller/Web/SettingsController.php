@@ -55,15 +55,15 @@ final class SettingsController extends BaseController
     public function index(SessionInterface $session, IndexViewData $viewData): Response
     {
         $keys = $this->getUser()->getApiKeys();
-        $viewData->addKeys($keys);
+        $viewData->addSettingsForm($this->createForm(SettingsForm::class, Settings::fromSession($session)))
+            ->addKeyForm($this->createForm(ApiKeyForm::class))
+            ->addChangePasswordForm($this->createForm(ChangePasswordForm::class))
+            ->addKeys($keys);
         $keys = $keys->toArray();
         array_walk($keys, fn(ApiKey $apiKey) => $viewData->addDescriptionForm(
             $this->createForm(EditApiKeyForm::class, ApiKeyDescription::fromEntity($apiKey)),
             $apiKey->getId()
         ));
-        $viewData->addSettingsForm($this->createForm(SettingsForm::class, Settings::fromSession($session)));
-        $viewData->addKeyForm($this->createForm(ApiKeyForm::class));
-        $viewData->addChangePasswordForm($this->createForm(ChangePasswordForm::class));
 
         return $this->render(self::INDEX_TEMPLATE, $viewData->getOptions());
     }
@@ -78,15 +78,15 @@ final class SettingsController extends BaseController
             return $action->onSuccess();
         }
         $keys = $this->getUser()->getApiKeys();
-        $viewData->addKeys($keys);
+        $viewData->addKeys($keys)
+            ->addSettingsForm($settingsForm)
+            ->addKeyForm($keyForm)
+            ->addChangePasswordForm($changePasswordForm);
         $keys = $keys->toArray();
         array_walk($keys, fn(ApiKey $apiKey) => $viewData->addDescriptionForm(
             $this->createForm(EditApiKeyForm::class, ApiKeyDescription::fromEntity($apiKey)),
             $apiKey->getId()
         ));
-        $viewData->addSettingsForm($settingsForm);
-        $viewData->addKeyForm($keyForm);
-        $viewData->addChangePasswordForm($changePasswordForm);
 
         return $this->render(self::INDEX_TEMPLATE, $viewData->getOptions());
     }

@@ -4,9 +4,9 @@ namespace App\Services\Entity;
 
 use App\Entity\QuickList\ClipboardPosition;
 use App\Repository\QuickList\ClipboardPositionRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class QuickListClipboardPositionService extends EntityService
 {
@@ -16,10 +16,10 @@ class QuickListClipboardPositionService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ClipboardPositionRepository $clipboardPositionRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->clipboardPositionRepository = $clipboardPositionRepository;
     }
 

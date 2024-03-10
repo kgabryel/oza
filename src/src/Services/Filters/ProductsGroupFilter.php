@@ -6,10 +6,10 @@ use App\Controller\Web\ProductsGroupsController;
 use App\Form\Filters\ProductsGroupFindForm;
 use App\Model\Filter\ProductsGroup;
 use App\Repository\ProductsGroupRepository;
+use App\Services\UserService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductsGroupFilter extends Filter
 {
@@ -17,19 +17,18 @@ class ProductsGroupFilter extends Filter
         FormFactoryInterface $factory,
         RequestStack $stack,
         ProductsGroupRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct(
             $factory,
             $stack,
-            $repository,
-            $tokenStorage,
+            $userService,
             $router,
             ProductsGroupFindForm::class,
             ProductsGroupsController::INDEX_URL
         );
         $data = $this->form->getData() ?? new ProductsGroup();
-        $this->results = $this->repository->filter($this->user, $data);
+        $this->results = $repository->filter($this->user, $data);
     }
 }

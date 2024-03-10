@@ -23,7 +23,7 @@ class ApiAuthenticator extends AbstractGuardAuthenticator
         $this->apiKeyRepository = $apiKeyRepository;
     }
 
-    public function checkCredentials($credentials, UserInterface $user): bool
+    public function checkCredentials(mixed $credentials, UserInterface $user): bool
     {
         return true;
     }
@@ -33,7 +33,7 @@ class ApiAuthenticator extends AbstractGuardAuthenticator
         return $request->headers->get(self::AUTH_HEADER);
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider): ?User
+    public function getUser(mixed $credentials, UserProviderInterface $userProvider): ?User
     {
         $key = $this->apiKeyRepository->findOneBy([
             'key' => $credentials,
@@ -48,14 +48,14 @@ class ApiAuthenticator extends AbstractGuardAuthenticator
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): void
-    {
-        return;
-    }
-
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
         return null;
+    }
+
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
+        return new Response();
     }
 
     public function supports(Request $request): bool

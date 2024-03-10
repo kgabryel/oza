@@ -26,10 +26,8 @@ class FBAuthenticator
         $this->facebook = $facebook;
     }
 
-    public function authenticate(
-        TokenStorageInterface $tokenStorage,
-        Session $session
-    ): void {
+    public function authenticate(TokenStorageInterface $tokenStorage, Session $session): void
+    {
         $token = new UsernamePasswordToken($this->user, null, 'main', $this->user->getRoles());
         $tokenStorage->setToken($token);
         $session->set('_security_main', serialize($token));

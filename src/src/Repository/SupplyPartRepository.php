@@ -20,7 +20,7 @@ class SupplyPartRepository extends ServiceEntityRepository
         parent::__construct($registry, SupplyPart::class);
     }
 
-    public function findById($id, User $user): ?SupplyPart
+    public function findById(int $id, User $user): ?SupplyPart
     {
         return $this->createQueryBuilder('e')
             ->select('e')

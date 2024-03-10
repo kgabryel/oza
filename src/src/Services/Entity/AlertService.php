@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\Alert;
 use App\Model\Form\EditAlert;
 use App\Repository\AlertRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AlertService extends EntityService
 {
@@ -21,10 +21,10 @@ class AlertService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         AlertRepository $alertRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->alertRepository = $alertRepository;
     }
 
@@ -64,8 +64,8 @@ class AlertService extends EntityService
         }
         /** @var EditAlert $data */
         $data = $form->getData();
-        $this->alert->setDescription($data->getDescription());
-        $this->alert->setType($data->getType());
+        $this->alert->setDescription($data->getDescription())
+            ->setType($data->getType());
         $data->isActive() ? $this->alert->activate() : $this->alert->deactivate();
         $this->saveEntity($this->alert);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, AlertMessages::UPDATE_CORRECT);

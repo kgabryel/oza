@@ -133,9 +133,7 @@ class Alert implements Stringable
 
     public function removeSupplyAlert(SupplyAlert $supplyAlert): self
     {
-        if ($this->supplyAlerts->contains($supplyAlert)) {
-            $this->supplyAlerts->removeElement($supplyAlert);
-        }
+        $this->supplyAlerts->removeElement($supplyAlert);
 
         return $this;
     }

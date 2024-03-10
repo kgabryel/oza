@@ -7,9 +7,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueForUserValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint): void
+    /**
+     * @param  ?string  $value
+     * @param  UniqueForUser  $constraint
+     *
+     * @return void
+     */
+    public function validate(mixed $value, Constraint $constraint): void
     {
-        /* @var UniqueForUser $constraint */
         if ($value === null) {
             return;
         }

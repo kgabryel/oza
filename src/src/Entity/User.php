@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  * @ORM\Table(name="users")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="user")
@@ -37,8 +38,7 @@ class User implements UserInterface
      */
     private Collection $brands;
     /**
-     * @ORM\OneToMany(targetEntity=QuickListClipboardPosition::class, mappedBy="user",
-     *     orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=QuickListClipboardPosition::class, mappedBy="user", orphanRemoval=true)
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private Collection $clipboardPositions;
@@ -49,7 +49,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="bigint", nullable=true)
      */
-    private ?string $fbId;
+    private ?int $fbId;
     /**
      * @ORM\OneToMany(targetEntity=ProductsGroup::class, mappedBy="user")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -67,8 +67,7 @@ class User implements UserInterface
      */
     private Collection $lists;
     /**
-     * @ORM\OneToMany(targetEntity=ShoppingListClipboardPosition::class, mappedBy="user",
-     *     orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ShoppingListClipboardPosition::class, mappedBy="user", orphanRemoval=true)
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private Collection $listsClipboardPositions;
@@ -312,11 +311,6 @@ class User implements UserInterface
      */
     public function eraseCredentials(): void
     {
-    }
-
-    public function getActiveAlerts(): Collection
-    {
-        return $this->getAlerts()->filter(fn(Alert $alert) => $alert->isActive());
     }
 
     /**
@@ -563,7 +557,7 @@ class User implements UserInterface
     public function getUsername(): string
     {
         if ($this->userType === 2) {
-            return $this->name === '' ? $this->email : $this->name;
+            return ($this->name ?? '') === '' ? $this->email : $this->name ?? '';
         }
 
         return $this->email;
@@ -571,9 +565,7 @@ class User implements UserInterface
 
     public function removeAlert(Alert $alert): self
     {
-        if ($this->alerts->contains($alert)) {
-            $this->alerts->removeElement($alert);
-        }
+        $this->alerts->removeElement($alert);
 
         return $this;
     }
@@ -587,9 +579,8 @@ class User implements UserInterface
 
     public function removeBrand(Brand $brand): self
     {
-        if ($this->brands->contains($brand)) {
-            $this->brands->removeElement($brand);
-        }
+        $this->brands->removeElement($brand);
+
         return $this;
     }
 
@@ -602,18 +593,14 @@ class User implements UserInterface
 
     public function removeGroup(ProductsGroup $group): self
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-        }
+        $this->groups->removeElement($group);
 
         return $this;
     }
 
     public function removeList(ShoppingList $list): self
     {
-        if ($this->lists->contains($list)) {
-            $this->lists->removeElement($list);
-        }
+        $this->lists->removeElement($list);
 
         return $this;
     }
@@ -627,9 +614,7 @@ class User implements UserInterface
 
     public function removeNote(Note $note): self
     {
-        if ($this->notes->contains($note)) {
-            $this->notes->removeElement($note);
-        }
+        $this->notes->removeElement($note);
 
         return $this;
     }
@@ -637,41 +622,34 @@ class User implements UserInterface
     public function removePhoto(Photo $photo): self
     {
         $this->photos->removeElement($photo);
+
         return $this;
     }
 
     public function removeProduct(Product $product): self
     {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }
 
     public function removeQuickList(QuickList $quickList): self
     {
-        if ($this->quickLists->contains($quickList)) {
-            $this->quickLists->removeElement($quickList);
-        }
+        $this->quickLists->removeElement($quickList);
 
         return $this;
     }
 
     public function removeShop(Shop $shop): self
     {
-        if ($this->shops->contains($shop)) {
-            $this->shops->removeElement($shop);
-        }
+        $this->shops->removeElement($shop);
 
         return $this;
     }
 
     public function removeShopping(Shopping $shopping): self
     {
-        if ($this->shopping->contains($shopping)) {
-            $this->shopping->removeElement($shopping);
-        }
+        $this->shopping->removeElement($shopping);
 
         return $this;
     }
@@ -685,9 +663,7 @@ class User implements UserInterface
 
     public function removeUnit(Unit $unit): self
     {
-        if ($this->units->contains($unit)) {
-            $this->units->removeElement($unit);
-        }
+        $this->units->removeElement($unit);
 
         return $this;
     }

@@ -6,12 +6,12 @@ use App\Entity\ShoppingList\Position;
 use App\Entity\ShoppingList\ShoppingList;
 use App\Model\Form\ChangeShop;
 use App\Repository\ShoppingList\PositionRepository;
+use App\Services\UserService;
 use App\Utils\FormUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShoppingListPositionService extends EntityService
 {
@@ -21,10 +21,10 @@ class ShoppingListPositionService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         PositionRepository $positionRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->positionRepository = $positionRepository;
     }
 

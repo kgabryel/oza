@@ -62,11 +62,12 @@ class LoginValidator
 
     public function setErrors(Request $request): void
     {
-        $request->getSession()->getFlashBag()->set('loginErrors', $this->errors['login']);
-        $request->getSession()->getFlashBag()->set('emailErrors', $this->errors['email']);
-        $request->getSession()->getFlashBag()->set('passwordErrors', $this->errors['password']);
-        $request->getSession()->getFlashBag()->set('invalidEmail', $this->invalidEmail);
-        $request->getSession()->getFlashBag()->set('invalidPassword', $this->invalidPassword);
+        $flashBag = $request->getSession()->getFlashBag();
+        $flashBag->set('loginErrors', $this->errors['login']);
+        $flashBag->set('emailErrors', $this->errors['email']);
+        $flashBag->set('passwordErrors', $this->errors['password']);
+        $flashBag->set('invalidEmail', $this->invalidEmail);
+        $flashBag->set('invalidPassword', $this->invalidPassword);
     }
 
     public function setLoginError(string $error): void

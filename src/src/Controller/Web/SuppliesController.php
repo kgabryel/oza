@@ -117,7 +117,6 @@ final class SuppliesController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $supply = $this->supplyService->getSupply();
-        $editViewData->addEntity($supply);
         $editForm = $this->createForm(EditSupplyForm::class, EditSupply::fromEntity($supply), [
             'method' => Request::METHOD_PUT
         ]);
@@ -125,9 +124,10 @@ final class SuppliesController extends BaseController
             'supply' => $supply
         ]);
         $alertForm = $this->getSupplyAlertForm($supply, $alertRepository);
-        $editViewData->addEditForm($editForm);
-        $editViewData->addAlertForm($alertForm);
-        $editViewData->addSupplyPartForm($supplyPartForm);
+        $editViewData->addEditForm($editForm)
+            ->addAlertForm($alertForm)
+            ->addSupplyPartForm($supplyPartForm)
+            ->addEntity($supply);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -167,10 +167,10 @@ final class SuppliesController extends BaseController
         $supplyPartForm = $this->createForm(SupplyPartForm::class, null, [
             'supply' => $supply
         ]);
-        $editViewData->addEntity($supply);
-        $editViewData->addEditForm($editForm);
-        $editViewData->addAlertForm($alertForm);
-        $editViewData->addSupplyPartForm($supplyPartForm);
+        $editViewData->addEntity($supply)
+            ->addEditForm($editForm)
+            ->addAlertForm($alertForm)
+            ->addSupplyPartForm($supplyPartForm);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

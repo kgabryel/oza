@@ -10,9 +10,9 @@ use App\Repository\ShoppingList\ClipboardPositionRepository;
 use App\Repository\ShoppingList\ListRepository;
 use App\Services\Transformer\ShoppingListClipboardPositionTransformer;
 use App\Services\Transformer\ShoppingListTransformer;
+use App\Services\UserService;
 use App\ViewData\ViewData;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class IndexViewData extends ViewData
 {
@@ -20,12 +20,12 @@ class IndexViewData extends ViewData
 
     public function __construct(
         ListRepository $listRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ClipboardPositionRepository $clipboardPositionRepository,
         SessionInterface $session
     ) {
         parent::__construct($session);
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->options[ViewParameters::HIDE] = $session->get(Settings::HIDE_BOUGHT);
         $this->options[ViewParameters::SHOPPING_LIST_LAYOUT] =
             $session->get(Settings::SHOOPING_LIST_LAYOUT_TYPE)->value;

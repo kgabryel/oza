@@ -8,23 +8,23 @@ use App\Repository\ProductRepository;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\ShoppingList\ClipboardPositionRepository;
 use App\Services\Transformer\ShoppingListClipboardPositionTransformer;
+use App\Services\UserService;
 use App\Utils\FormUtils;
 use App\ViewData\ViewData;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FormViewData extends ViewData
 {
     public function __construct(
         ProductsGroupRepository $productsGroupRepository,
         ProductRepository $productRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ClipboardPositionRepository $clipboardPositionRepository,
         SessionInterface $session
     ) {
         parent::__construct($session);
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->options[ViewParameters::PRODUCTS_GROUPS] = FormUtils::productsGroupSelectOptions(
             $productsGroupRepository->findBy(['user' => $user], ['id' => 'DESC'])
         );

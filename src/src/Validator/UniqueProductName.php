@@ -5,7 +5,7 @@ namespace App\Validator;
 use App\Entity\Brand;
 use App\Entity\User;
 use App\Repository\ProductRepository;
-use Symfony\Component\Form\Form;
+use App\Utils\FormUtils;
 use Symfony\Component\Validator\Context\ExecutionContext;
 
 class UniqueProductName
@@ -39,8 +39,7 @@ class UniqueProductName
         if ($value === null) {
             return;
         }
-        /** @var Form $form */
-        $form = $this->context->getObject()->getParent();
+        $form = FormUtils::getParentForm($this->context);
         $connectedField = $form->get('brand');
         if (!$connectedField->isValid()) {
             return;
@@ -55,6 +54,7 @@ class UniqueProductName
         ]);
         if (count($products) > 1) {
             $this->showError($brand, $value);
+
             return;
         }
         $product = $products[0] ?? null;

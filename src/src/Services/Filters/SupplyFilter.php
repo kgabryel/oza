@@ -6,10 +6,10 @@ use App\Controller\Web\SuppliesController;
 use App\Form\Filters\SupplyFindForm;
 use App\Model\Filter\Supply;
 use App\Repository\SupplyRepository;
+use App\Services\UserService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyFilter extends Filter
 {
@@ -17,19 +17,18 @@ class SupplyFilter extends Filter
         FormFactoryInterface $factory,
         RequestStack $stack,
         SupplyRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct(
             $factory,
             $stack,
-            $repository,
-            $tokenStorage,
+            $userService,
             $router,
             SupplyFindForm::class,
             SuppliesController::INDEX_URL
         );
         $data = $this->form->getData() ?? new Supply();
-        $this->results = $this->repository->filter($this->user, $data);
+        $this->results = $repository->filter($this->user, $data);
     }
 }

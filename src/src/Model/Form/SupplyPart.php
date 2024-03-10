@@ -8,7 +8,7 @@ use App\Entity\Unit;
 
 class SupplyPart
 {
-    private ?float $amount;
+    private float $amount;
     private ?string $dateOfConsumption;
     private ?string $description;
     private ?bool $open;
@@ -18,7 +18,7 @@ class SupplyPart
 
     public function __construct()
     {
-        $this->amount = null;
+        $this->amount = 0;
         $this->description = null;
         $this->open = null;
         $this->unit = null;

@@ -6,14 +6,14 @@ use App\Config\Message\ProductsGroupMessages;
 use App\Controller\Web\BaseController;
 use App\Entity\ProductsGroup;
 use App\Model\Form\EditProductsGroup;
-use App\Model\Form\Photo;
+use App\Model\Form\MainPhoto;
 use App\Repository\ProductsGroupRepository;
+use App\Services\UserService;
 use App\Utils\FormUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductsGroupService extends EntityService
 {
@@ -23,10 +23,10 @@ class ProductsGroupService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ProductsGroupRepository $productsGroupRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->productsGroupRepository = $productsGroupRepository;
     }
 
@@ -36,10 +36,11 @@ class ProductsGroupService extends EntityService
         if (!$form->isSubmitted() || !$form->isValid()) {
             return false;
         }
-        /** @var Photo $data */
+        /** @var MainPhoto $data */
         $data = $form->getData();
         $this->productsGroup->setMainPhoto($data->getPhoto());
         $this->saveEntity($this->productsGroup);
+
         return true;
     }
 
@@ -87,9 +88,9 @@ class ProductsGroupService extends EntityService
         }
         /** @var EditProductsGroup $data */
         $data = $form->getData();
-        $this->productsGroup->setName($data->getName());
-        $this->productsGroup->setNote($data->getNote());
-        $this->productsGroup->setBaseUnit($data->getBaseUnit());
+        $this->productsGroup->setName($data->getName())
+            ->setNote($data->getNote())
+            ->setBaseUnit($data->getBaseUnit());
         $this->saveEntity($this->productsGroup);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, ProductsGroupMessages::UPDATE_CORRECT);
 

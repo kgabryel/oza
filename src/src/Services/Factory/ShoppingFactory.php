@@ -11,13 +11,13 @@ use App\Model\Form\ShoppingPosition;
 use App\Services\Entity\SupplyAlertService;
 use App\Services\ExternalSuppliesService;
 use App\Services\SupplyAlerts\SupplyAlertsService;
+use App\Services\UserService;
 use App\Utils\ShoppingPositionUtils;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShoppingFactory extends EntityFactory
 {
@@ -29,13 +29,13 @@ class ShoppingFactory extends EntityFactory
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyPartFactory $supplyPartFactory,
         SupplyAlertService $supplyAlertService,
         SupplyAlertsService $alertsService,
         ExternalSuppliesService $externalSuppliesService
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->supplyPartFactory = $supplyPartFactory;
         $this->supplyAlertService = $supplyAlertService;
         $this->alertsService = $alertsService;
@@ -54,19 +54,19 @@ class ShoppingFactory extends EntityFactory
         $date = $data->getDate();
         foreach ($data->getPositions() as $position) {
             $entity = new Shopping();
-            $entity->setUser($this->user);
+            $entity->setUser($this->user)
+                ->setShop($shop)
+                ->setDate(DateTime::createFromFormat('Y-m-d', $date))
+                ->setShop($shop)
+                ->setUnit($position->getUnit())
+                ->setAmount($position->getAmount());
+            $price = $position->getPrice();
+            $discount = $position->getDiscount();
             if ($position->getType() === ProductPosition::PRODUCTS_GROUP) {
                 $entity->setGroup($position->getProductsGroup());
             } else {
                 $entity->setProduct($position->getProduct());
             }
-            $entity->setShop($shop);
-            $entity->setDate(DateTime::createFromFormat('Y-m-d', $date));
-            $entity->setShop($shop);
-            $entity->setUnit($position->getUnit());
-            $entity->setAmount($position->getAmount());
-            $price = $position->getPrice();
-            $discount = $position->getDiscount();
             if ($discount !== null) {
                 $price -= $discount;
             }

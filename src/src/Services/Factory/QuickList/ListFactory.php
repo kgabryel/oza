@@ -21,9 +21,9 @@ class ListFactory extends EntityFactory
         /** @var QuickListModel $data */
         $data = $form->getData();
         $list = new QuickList();
-        $list->setUser($this->user);
-        $list->setName($data->getName());
-        $list->setNote($data->getNote());
+        $list->setUser($this->user)
+            ->setName($data->getName())
+            ->setNote($data->getNote());
         $positionFactory = new PositionFactory($this->entityManager);
         $positionFactory->setList($list);
         foreach ($data->getPositions() as $positionData) {

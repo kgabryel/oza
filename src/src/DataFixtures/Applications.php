@@ -62,9 +62,7 @@ class Applications extends Fixture
 
     private function create(array $data): ?Application
     {
-        $application = $this->applicationRepository->findOneBy([
-            'name' => $data['name']
-        ]);
+        $application = $this->applicationRepository->findOneBy(['name' => $data['name']]);
         if ($application !== null) {
             return null;
         }

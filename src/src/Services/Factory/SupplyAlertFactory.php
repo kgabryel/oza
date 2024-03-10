@@ -20,10 +20,10 @@ class SupplyAlertFactory extends EntityFactory
         $data = $form->getData();
         $data->setSupply($supply);
         $alert = new SupplyAlert();
-        $alert->setAmount($data->getAmount());
-        $alert->setSupply($supply);
-        $alert->setAlert($data->getAlert());
-        $alert->setUnit($data->getUnit());
+        $alert->setAmount($data->getAmount())
+            ->setSupply($supply)
+            ->setAlert($data->getAlert())
+            ->setUnit($data->getUnit());
         $this->saveEntity($alert);
 
         return true;

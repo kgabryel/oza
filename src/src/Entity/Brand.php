@@ -110,10 +110,7 @@ class Brand implements Stringable
     public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getBrand() === $this) {
-                $product->setBrand(null);
-            }
+            $product->setBrand(null);
         }
 
         return $this;

@@ -10,20 +10,20 @@ abstract class SettingsFactory
     public static function get(User $user): Settings
     {
         $settings = new Settings();
-        $settings->setDeleteUncheckedPositionsQuick(false);
-        $settings->setDeleteUncheckedPositions(false);
-        $settings->setHideBought(false);
-        $settings->setPagination(10);
-        $settings->setNewShoppingDays(30);
-        $settings->setMaxShopsGroupCount(3);
-        $settings->setCreateSupply(false);
-        $settings->setDeleteLists(false);
-        $settings->setDeleteQuickLists(false);
-        $settings->setDeleteListDays(30);
-        $settings->setDeleteQuickListDays(30);
-        $settings->setAutocomplete(true);
-        $settings->setGridLayout(false);
-        $settings->setUser($user);
+        $settings->setDeleteUncheckedPositionsQuick(false)
+            ->setDeleteUncheckedPositions(false)
+            ->setHideBought(false)
+            ->setPagination(10)
+            ->setNewShoppingDays(30)
+            ->setMaxShopsGroupCount(3)
+            ->setCreateSupply(false)
+            ->setDeleteLists(false)
+            ->setDeleteQuickLists(false)
+            ->setDeleteListDays(30)
+            ->setDeleteQuickListDays(30)
+            ->setAutocomplete(true)
+            ->setGridLayout(false)
+            ->setUser($user);
 
         return $settings;
     }

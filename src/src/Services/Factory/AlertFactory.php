@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\Alert;
 use App\Model\Form\Alert as AlertModel;
 use App\Repository\AlertTypeRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AlertFactory extends EntityFactory
 {
@@ -20,10 +20,10 @@ class AlertFactory extends EntityFactory
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         AlertTypeRepository $alertTypeRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->alertTypeRepository = $alertTypeRepository;
     }
 
@@ -37,10 +37,10 @@ class AlertFactory extends EntityFactory
         $data = $form->getData();
         foreach ($data->getTypes() as $type) {
             $alert = new Alert();
-            $alert->setUser($this->user);
+            $alert->setUser($this->user)
+                ->setDescription($data->getDescription())
+                ->setType($this->alertTypeRepository->find($type));
             $data->isActive() ? $alert->activate() : $alert->deactivate();
-            $alert->setDescription($data->getDescription());
-            $alert->setType($this->alertTypeRepository->find($type));
             $this->saveEntity($alert);
         }
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, AlertMessages::CREATED_CORRECTLY);

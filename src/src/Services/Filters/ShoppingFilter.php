@@ -6,10 +6,10 @@ use App\Controller\Web\ShoppingController;
 use App\Form\Filters\ShoppingFindForm;
 use App\Model\Filter\Shopping;
 use App\Repository\ShoppingRepository;
+use App\Services\UserService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ShoppingFilter extends Filter
 {
@@ -17,19 +17,18 @@ class ShoppingFilter extends Filter
         FormFactoryInterface $factory,
         RequestStack $stack,
         ShoppingRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router
     ) {
         parent::__construct(
             $factory,
             $stack,
-            $repository,
-            $tokenStorage,
+            $userService,
             $router,
             ShoppingFindForm::class,
             ShoppingController::INDEX_URL
         );
         $data = $this->form->getData() ?? new Shopping();
-        $this->results = $this->repository->filter($this->user, $data);
+        $this->results = $repository->filter($this->user, $data);
     }
 }

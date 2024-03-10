@@ -12,11 +12,11 @@ use App\Model\Filter\Supply;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\SupplyGroupRepository;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyFindForm extends UserForm
 {
@@ -27,10 +27,10 @@ class SupplyFindForm extends UserForm
     public function __construct(
         UnitRepository $repository,
         ProductsGroupRepository $productsGroupRepository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyGroupRepository $supplyGroupRepository
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->units = $repository->findBy([
             'user' => $this->user
         ]);

@@ -10,12 +10,12 @@ use App\Model\Form\QuickList as QuickListModel;
 use App\Repository\QuickList\ListRepository;
 use App\Services\Factory\QuickList\ClipboardPositionFactory;
 use App\Services\Factory\QuickList\PositionFactory;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class QuickListService extends EntityService
 {
@@ -25,10 +25,10 @@ class QuickListService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ListRepository $listRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->listRepository = $listRepository;
     }
 
@@ -62,8 +62,8 @@ class QuickListService extends EntityService
             $this->entityManager->remove($position);
         }
         $this->entityManager->flush();
-        $this->quickList->setName($data->getName());
-        $this->quickList->setNote($data->getNote());
+        $this->quickList->setName($data->getName())
+            ->setNote($data->getNote());
         foreach ($data->getPositions() as $position) {
             $position = $positionFactory->createFromModel($position);
             $this->quickList->addPosition($position);

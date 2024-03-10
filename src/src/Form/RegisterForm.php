@@ -45,9 +45,7 @@ class RegisterForm extends AbstractType
                     'max' => RegisterConfig::EMAIL_MAX_LENGTH,
                     'maxMessage' => RegisterErrors::EMAIL_TOO_LONG
                 ]),
-                new UniqueEmail([
-                    UniqueEmail::REPOSITORY_OPTION => $this->repository
-                ])
+                new UniqueEmail($this->repository)
             ]
         ])
             ->add('password', RepeatedType::class, [

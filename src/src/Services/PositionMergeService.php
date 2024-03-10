@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Config\ProductPosition;
+use App\Entity\Product;
+use App\Entity\ProductsGroup;
+use App\Entity\Unit;
 use App\Model\Form\ShoppingListPosition;
 use App\Utils\UnitUtils;
 
@@ -24,7 +27,7 @@ class PositionMergeService
     }
 
     /**
-     * @param ShoppingListPosition[] $positions
+     * @param  ShoppingListPosition[]  $positions
      *
      * @return $this
      */
@@ -41,10 +44,12 @@ class PositionMergeService
     private function setIndexes(): void
     {
         foreach ($this->positions as $key => $position) {
+            /** @var ProductsGroup|Product $positionValue */
+            $positionValue = $position->getProductsGroup() ?? $position->getProduct();
             if ($position->getType() === ProductPosition::PRODUCTS_GROUP) {
-                $index = sprintf('g_%s', $position->getProductsGroup()->getId());
+                $index = sprintf('g_%s', $positionValue->getId());
             } else {
-                $index = sprintf('p_%s', $position->getProduct()->getId());
+                $index = sprintf('p_%s', $positionValue->getId());
             }
             if (!isset($this->indexes[$index])) {
                 $this->indexes[$index] = $key;
@@ -60,18 +65,22 @@ class PositionMergeService
     public function merge(): self
     {
         foreach ($this->toMerge as $item) {
+            /** @var Unit $fromUnit */
+            $fromUnit = $this->positions[$item['from']]->getUnit();
+            /** @var Unit $toUnit */
+            $toUnit = $this->positions[$item['to']]->getUnit();
             $greaterUnit = UnitUtils::findGreaterUnit(
-                $this->positions[$item['from']]->getUnit(),
-                $this->positions[$item['to']]->getUnit()
+                $fromUnit,
+                $toUnit
             );
             $amount1 = UnitUtils::parseAmount(
                 $this->positions[$item['from']]->getAmount(),
-                $this->positions[$item['from']]->getUnit(),
+                $fromUnit,
                 $greaterUnit
             );
             $amount2 = UnitUtils::parseAmount(
                 $this->positions[$item['to']]->getAmount(),
-                $this->positions[$item['to']]->getUnit(),
+                $toUnit,
                 $greaterUnit
             );
             $this->positions[$item['to']]->setUnit($greaterUnit);

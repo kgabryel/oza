@@ -15,12 +15,7 @@ final class UnitsController extends BaseController
         $condition = $this->getCondition(
             fn(): bool => $unitService->find($id),
             function() use ($unitService) {
-                $unit = $unitService->getUnit();
-                if ($unit->getMain() !== null) {
-                    $unit = $unit->getMain();
-                }
-
-                return UnitTransformer::toArray($unit);
+                return UnitTransformer::toArray($unitService->getUnit()->getMain() ?? $unitService->getUnit());
             }
         );
 

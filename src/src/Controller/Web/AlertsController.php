@@ -43,11 +43,11 @@ final class AlertsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $alert = $alertService->getAlert();
-        $editViewData->addEntity($alert);
         $form = $this->createForm(EditAlertForm::class, EditAlert::fromEntity($alert), [
             'method' => Request::METHOD_PUT
         ]);
-        $editViewData->addEditForm($form);
+        $editViewData->addEditForm($form)
+            ->addEntity($alert);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -75,8 +75,8 @@ final class AlertsController extends BaseController
         if ($alertService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addEntity($alert);
-        $editViewData->addEditForm($form);
+        $editViewData->addEntity($alert)
+            ->addEditForm($form);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

@@ -7,14 +7,16 @@ use App\Entity\ProductsGroup;
 use App\Entity\Unit;
 use App\Entity\User;
 use App\Repository\ProductsGroupRepository;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Validator\Context\ExecutionContext;
 
 class FormUtils
 {
     public static function getJsonContent(Request $request): array
     {
-        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode((string)$request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new HttpException(400, 'Invalid json');
         }
@@ -48,7 +50,7 @@ class FormUtils
     }
 
     /**
-     * @param Product[] $products
+     * @param  Product[]  $products
      *
      * @return array
      */
@@ -59,11 +61,12 @@ class FormUtils
             $tmp[(string)$product] = $product->getId();
         }
         ksort($tmp);
+
         return $tmp;
     }
 
     /**
-     * @param ProductsGroup[] $productsGroups
+     * @param  ProductsGroup[]  $productsGroups
      *
      * @return array
      */
@@ -74,6 +77,7 @@ class FormUtils
             $tmp[$productsGroup->getName()] = $productsGroup->getId();
         }
         ksort($tmp);
+
         return $tmp;
     }
 
@@ -89,5 +93,10 @@ class FormUtils
         }
 
         return $result;
+    }
+
+    public static function getParentForm(ExecutionContext $context): Form
+    {
+        return $context->getObject()->getParent();
     }
 }

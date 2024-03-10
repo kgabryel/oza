@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SettingsService
 {
@@ -28,12 +27,12 @@ class SettingsService
         SessionInterface $session,
         EntityManagerInterface $entityManager,
         FlashBagInterface $flashBag,
-        TokenStorageInterface $tokenStorage
+        UserService $userService
     ) {
         $this->session = $session;
         $this->entityManager = $entityManager;
         $this->flashBag = $flashBag;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $userService->getUser();
     }
 
     public function changePassword(

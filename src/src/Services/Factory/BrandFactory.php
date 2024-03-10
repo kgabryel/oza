@@ -20,9 +20,9 @@ class BrandFactory extends EntityFactory
         /** @var BrandModel $data */
         $data = $form->getData();
         $brand = new Brand();
-        $brand->setUser($this->user);
-        $brand->setName($data->getName());
-        $brand->setDescription($data->getDescription());
+        $brand->setUser($this->user)
+            ->setName($data->getName())
+            ->setDescription($data->getDescription());
         $this->saveEntity($brand);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, BrandsMessages::CREATED_CORRECTLY);
 

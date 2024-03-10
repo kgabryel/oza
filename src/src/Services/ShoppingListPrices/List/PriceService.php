@@ -13,9 +13,9 @@ use App\Services\ShoppingListPrices\List\Dto\Set;
 use App\Services\ShoppingListPrices\List\Dto\Shopping as ShoppingDto;
 use App\Services\ShoppingListPrices\ProductsGroupsPricesService;
 use App\Services\ShoppingListPrices\ProductsPricesService;
+use App\Services\UserService;
 use App\Utils\ShopsUtils;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PriceService
 {
@@ -35,14 +35,13 @@ class PriceService
     private array $shopsSets;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SessionInterface $session,
         ProductsGroupsPricesService $productsGroupsPricesService,
         ProductsPricesService $productsPricesService
     ) {
-        $user = $tokenStorage->getToken()->getUser();
         $this->session = $session;
-        $this->shops = $user->getShops()->toArray();
+        $this->shops = $userService->getUser()->getShops()->toArray();
         $this->shopsSets = [];
         $this->setShops();
         $this->shopping = [];
@@ -110,7 +109,8 @@ class PriceService
         $filtered = array_values(
             array_filter(
                 $this->products,
-                static fn(ProductPosition $p): bool => $p->getProduct()->getId() === $shopping->getProduct()->getId()
+                static fn(ProductPosition $p): bool => $p->getProduct()->getId() === $shopping->getPosition()
+                        ->getProduct()->getId()
             )
         );
 

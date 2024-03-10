@@ -32,7 +32,7 @@ abstract class BaseController extends AbstractController
 
     protected function redirectBack(): Response
     {
-        return $this->redirect($this->request->headers->get('referer'));
+        return $this->redirect($this->request->headers->get('referer') ?? '');
     }
 
     protected function render(string $view, array $parameters = [], Response $response = null): Response

@@ -31,12 +31,12 @@ class OldShopping implements ShoppingInterface
 
     private function getUnit(): Unit
     {
-        $group = $this->position->getGroup();
-        if ($group !== null) {
-            return $group->getBaseUnit();
+        $positionValue = $this->position->getValue();
+        if ($positionValue->isProductsGroup()) {
+            return $positionValue->getProductsGroup()->getBaseUnit();
         }
 
-        return $this->position->getProduct()->getUnit();
+        return $positionValue->getProduct()->getUnit();
     }
 
     public function getShop(): Shop

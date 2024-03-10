@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Config\Email;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -35,6 +36,7 @@ class ResetPasswordService
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager
     ): void {
+        /** @var User $user */
         $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         $this->resetPasswordHelper->removeResetRequest($token);
         $encodedPassword = $userPasswordHasher->hashPassword($user, $this->form->getData()->getNewPassword());

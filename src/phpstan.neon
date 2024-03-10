@@ -1,0 +1,77 @@
+parameters:
+	level: 8
+	checkGenericClassInNonGenericObjectType: false
+	paths:
+		- src
+	ignoreErrors:
+	    - '#type has no value type specified in iterable type array\.$#'
+	    - '#with no value type specified in iterable type array\.$#'
+	    - '#\(Symfony\\Component\\HttpFoundation\\Request\) does not accept Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
+	    -
+	        messages:
+	            - '#expects int, int\|null given\.$#'
+	            - '#expects string, string\|null given\.$#'
+	            - '#expects App\\Entity\\Unit, App\\Entity\\Unit\|null given\.$#'
+	            - '#expects App\\Entity\\AlertType, App\\Entity\\AlertType\|null given\.$#'
+	            - '#expects App\\Entity\\Shop, App\\Entity\\Shop\|null given\.$#'
+	            - '#expects App\\Entity\\ProductsGroup, App\\Entity\\ProductsGroup\|null given\.$#'
+	            - '#expects App\\Entity\\Supply, App\\Entity\\Supply\|null given\.$#'
+	            - '#expects App\\Entity\\Alert, App\\Entity\\Alert\|null given\.$#'
+	            - '#expects App\\Entity\\Product, App\\Entity\\Product\|null given\.$#'
+	        path: 'src/Services/Factory/*'
+	    -
+	        messages:
+	            - '#expects int, int\|null given\.$#'
+	            - '#expects bool, bool\|null given\.$#'
+	        path: 'src/Services/SettingsService.php'
+	    -
+	        messages:
+	            - '#expects string, string\|null given\.$#'
+	            - '#expects int, int\|null given\.$#'
+	            - '#expects App\\Entity\\Unit, App\\Entity\\Unit\|null given\.$#'
+	            - '#expects App\\Entity\\AlertType, App\\Entity\\AlertType\|null given\.$#'
+	        path: 'src/Services/Entity/*'
+	    -
+	        message: '#expects string, string\|null given\.$#'
+	        path: 'src/Model/Form/UserModel.php'
+	    -
+	        message: '#::\$id is never written, only read\.$#'
+	        path: 'src/Entity/*'
+	    -
+	        messages:
+	            - '#^Parameter \#3 \$roles of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array\<string\>, string given\.$#'
+	            - '#^Property App\\Services\\FBAuthenticator\:\:\$user \(App\\Entity\\User\) does not accept App\\Entity\\User\|null\.$#'
+	            - '#^Parameter \#1 \$token of method League\\OAuth2\\Client\\Provider\\Facebook\:\:getResourceOwner\(\) expects League\\OAuth2\\Client\\Token\\AccessToken, League\\OAuth2\\Client\\Token\\AccessTokenInterface given\.$#'
+	        path: 'src/Services/FBAuthenticator.php'
+	    -
+	        messages:
+	            - '#^Method App\\Model\\PositionDto\:\:getProductsGroup\(\) should return App\\Entity\\ProductsGroup but returns App\\Entity\\ProductsGroup\|null\.$#'
+	            - '#^Method App\\Model\\PositionDto\:\:getValue\(\) should return App\\Entity\\Product\|App\\Entity\\ProductsGroup but returns App\\Entity\\Product\|App\\Entity\\ProductsGroup\|null\.$#'
+	            - '#^Method App\\Model\\PositionDto\:\:getProduct\(\) should return App\\Entity\\Product but returns App\\Entity\\Product\|null\.$#'
+	        path: 'src/Model/PositionDto.php'
+	    -
+	        message: '#^Cannot call method getParent\(\) on object\|null\.$#'
+	        path: 'src/Utils/FormUtils.php'
+	    -
+	        messages:
+	            - '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
+	            - '#^Method App\\Services\\UserService\:\:getUser\(\) should return App\\Entity\\User but returns Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+	        path: 'src/Services/UserService.php'
+	    -
+	        message: '#^Cannot call method isXmlHttpRequest\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
+	        path: 'src/Controller/Api/BaseController.php'
+	    -
+	        message: '#^Parameter \#1 \$dateOfConsumption of method App\\Entity\\SupplyPart\:\:setDateOfConsumption\(\) expects DateTimeInterface\|null, DateTime\|false given\.$#'
+	        path: 'src/Services/Entity/SupplyPartService.php'
+	    -
+	        message: '#^Parameter \#1 \$date of method App\\Entity\\Shopping\:\:setDate\(\) expects DateTimeInterface, DateTime\|false given\.$#'
+	        path: 'src/Services/Factory/ShoppingFactory.php'
+	    -
+	        message: '#^Parameter \#1 \$dateOfConsumption of method App\\Entity\\SupplyPart\:\:setDateOfConsumption\(\) expects DateTimeInterface\|null, DateTime\|false given\.$#'
+	        path: 'src/Services/Factory/SupplyPartFactory.php'
+	    -
+	        message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:getFlashBag\(\)\.$#'
+	        path: 'src/Services/LoginValidator.php'
+	    -
+	        message: '#^Method App\\Services\\RegistrationService\:\:authenticate\(\) should return Symfony\\Component\\HttpFoundation\\Response but returns Symfony\\Component\\HttpFoundation\\Response\|null\.$#'
+	        path: 'src/Services/RegistrationService.php'

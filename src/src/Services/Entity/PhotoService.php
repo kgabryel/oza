@@ -5,12 +5,12 @@ namespace App\Services\Entity;
 use App\Config\PhotoType;
 use App\Entity\Photo;
 use App\Repository\PhotoRepository;
+use App\Services\UserService;
 use App\Utils\PhotoUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PhotoService extends EntityService
 {
@@ -22,12 +22,12 @@ class PhotoService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         PhotoRepository $photoRepository,
         Filesystem $filesystem,
         KernelInterface $kernel
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->photoRepository = $photoRepository;
         $this->filesystem = $filesystem;
         $this->kernel = $kernel;
@@ -62,6 +62,7 @@ class PhotoService extends EntityService
     public function set(Photo $photo): self
     {
         $this->photo = $photo;
+
         return $this;
     }
 }

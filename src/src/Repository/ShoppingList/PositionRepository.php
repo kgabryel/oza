@@ -21,7 +21,7 @@ class PositionRepository extends ServiceEntityRepository implements FindForUser
         parent::__construct($registry, Position::class);
     }
 
-    public function findById($id, User $user): ?Position
+    public function findById(int $id, User $user): ?Position
     {
         return $this->createQueryBuilder('e')
             ->select('e')

@@ -6,7 +6,7 @@ use App\Entity\User;
 
 trait FindTrait
 {
-    public function findById($id, User $user): mixed
+    public function findById(int $id, User $user): mixed
     {
         return $this->findOneBy(compact('id', 'user'));
     }

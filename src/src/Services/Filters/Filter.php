@@ -2,15 +2,14 @@
 
 namespace App\Services\Filters;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
+use App\Services\UserService;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class Filter
 {
@@ -18,17 +17,15 @@ abstract class Filter
     protected FormInterface $form;
     protected int $page;
     protected string $pathName;
-    protected ServiceEntityRepository $repository;
     protected Request $request;
     protected array $results;
     protected RouterInterface $router;
-    protected UserInterface $user;
+    protected User $user;
 
     public function __construct(
         FormFactoryInterface $factory,
         RequestStack $stack,
-        ServiceEntityRepository $repository,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         RouterInterface $router,
         string $formName,
         string $pathName
@@ -36,10 +33,9 @@ abstract class Filter
         $this->pathName = $pathName;
         $this->form = $factory->create($formName);
         $this->router = $router;
-        $this->repository = $repository;
         $this->request = $stack->getCurrentRequest();
         $this->form->handleRequest($this->request);
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $userService->getUser();
     }
 
     public function getForm(): FormInterface

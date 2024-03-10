@@ -20,8 +20,8 @@ class NoteFactory extends EntityFactory
         /** @var NoteModel $data */
         $data = $form->getData();
         $note = new Note();
-        $note->setUser($this->user);
-        $note->setContent($data->getContent());
+        $note->setUser($this->user)
+            ->setContent($data->getContent());
         $this->saveEntity($note);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, NoteMessages::CREATED_CORRECTLY);
 

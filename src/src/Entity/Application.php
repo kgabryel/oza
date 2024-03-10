@@ -92,7 +92,7 @@ class Application implements Stringable
 
     public function removeApiKey(ApiKey $apiKey): self
     {
-        if ($this->apiKeys->removeElement($apiKey) && $apiKey->getApplication() === $this) {
+        if ($this->apiKeys->removeElement($apiKey)) {
             $apiKey->setApplication(null);
         }
 

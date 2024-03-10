@@ -68,22 +68,22 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      *
-     * @param $credentials
+     * @param  array  $credentials
      *
      * @return string|null
      */
-    public function getPassword($credentials): ?string
+    public function getPassword(mixed $credentials): ?string
     {
         return $credentials['password'];
     }
 
     /**
-     * @param mixed $credentials
-     * @param UserProviderInterface $userProvider
+     * @param  mixed  $credentials
+     * @param  UserProviderInterface  $userProvider
      *
      * @return UserInterface|void
      */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser(mixed $credentials, UserProviderInterface $userProvider)
     {
         if (!$this->validator->checkCredentials($credentials)) {
             return;
@@ -94,13 +94,13 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
             return;
         }
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->entityManager->getRepository(User::class)
             ->findOneBy([
                 'email' => $credentials['email'],
                 'userType' => 1
             ]);
-        if (!$user) {
+        if ($user === null) {
             $this->validator->setLoginError(LoginErrors::INVALID_DATA);
 
             return;
@@ -112,12 +112,12 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     }
 
     /**
-     * @param mixed $credentials
-     * @param UserInterface $user
+     * @param  mixed  $credentials
+     * @param  User  $user
      *
      * @return bool
      */
-    public function checkCredentials($credentials, UserInterface $user): bool
+    public function checkCredentials(mixed $credentials, UserInterface $user): bool
     {
         if ($this->userPasswordHasher->isPasswordValid($user, $credentials['password'])) {
             return true;
@@ -130,8 +130,8 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     /**
      * Override to change what happens after a bad username/password is submitted.
      *
-     * @param Request $request
-     * @param AuthenticationException $exception
+     * @param  Request  $request
+     * @param  AuthenticationException  $exception
      *
      * @return RedirectResponse
      */
@@ -158,7 +158,7 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
      * Does the authenticator support the given Request?
      * If this returns false, the authenticator will be skipped.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return bool
      */
@@ -168,9 +168,6 @@ class FormAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             && $request->isMethod('POST');
     }
 
-    /**
-     * @return string
-     */
     protected function getLoginUrl(): string
     {
         return $this->urlGenerator->generate('login.show');

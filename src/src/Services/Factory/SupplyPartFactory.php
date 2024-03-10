@@ -23,14 +23,14 @@ class SupplyPartFactory extends EntityFactory
         /** @var SupplyPartModel $data */
         $data = $form->getData();
         $supplyPart = new SupplyPart();
-        $supplyPart->setSupply($supply);
-        $supplyPart->setAmount($data->getAmount());
-        $supplyPart->setPart($data->getPart());
-        $supplyPart->setDescription($data->getDescription() ?? '');
-        $supplyPart->setUnit($data->getUnit());
-        $data->isOpen() ? $supplyPart->open() : $supplyPart->close();
-        $supplyPart->setProduct($data->getProduct());
+        $supplyPart->setSupply($supply)
+            ->setAmount($data->getAmount())
+            ->setPart($data->getPart())
+            ->setDescription($data->getDescription() ?? '')
+            ->setUnit($data->getUnit())
+            ->setProduct($data->getProduct());
         $date = $data->getDateOfConsumption();
+        $data->isOpen() ? $supplyPart->open() : $supplyPart->close();
         if ($date !== null) {
             $supplyPart->setDateOfConsumption(DateTime::createFromFormat('Y-m-d', $date));
         }
@@ -44,6 +44,7 @@ class SupplyPartFactory extends EntityFactory
 
     public function createFromShoppingPosition(ShoppingPosition $shoppingPosition): void
     {
+        /** @var Supply $supply */
         $supply = $shoppingPosition->getSupply();
         $supplyPart = new SupplyPart();
         $supplyPart->setSupply($supply);

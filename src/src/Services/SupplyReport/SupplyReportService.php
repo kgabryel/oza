@@ -42,7 +42,7 @@ class SupplyReportService
         $writer = new Xlsx($spreadsheet);
         $fileName = sprintf('Raport_%s.xlsx', $this->date);
         $response = new StreamedResponse(
-            function () use ($writer) {
+            function() use ($writer) {
                 $writer->save('php://output');
             }
         );

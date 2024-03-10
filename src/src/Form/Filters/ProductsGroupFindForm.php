@@ -8,19 +8,19 @@ use App\Entity\Unit;
 use App\Form\UserForm;
 use App\Model\Filter\ProductsGroup;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductsGroupFindForm extends UserForm
 {
     private array $units;
 
-    public function __construct(UnitRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(UnitRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->units = $repository->findBy([
             'user' => $this->user
         ]);

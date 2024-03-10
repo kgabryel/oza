@@ -4,17 +4,18 @@ namespace App\Form;
 
 use App\Config\Form\ProductsGroupConfig;
 use App\Config\Message\Error\ProductsGroupErrors;
+use App\Entity\ProductsGroup;
 use App\Entity\Unit;
 use App\Field\Wysiwyg;
 use App\Model\Form\EditProductsGroup;
 use App\Repository\ProductsGroupRepository;
+use App\Services\UserService;
 use App\Utils\UnitUtils;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -23,14 +24,15 @@ class EditProductsGroupForm extends UserForm
 {
     private ProductsGroupRepository $repository;
 
-    public function __construct(ProductsGroupRepository $repository, TokenStorageInterface $tokenStorage)
+    public function __construct(ProductsGroupRepository $repository, UserService $userService)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->repository = $repository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var ProductsGroup $group */
         $group = $this->repository->find($options['expect']);
         $units = UnitUtils::getUnitList($group->getUnit());
         $builder->add('name', TextType::class, [
@@ -50,13 +52,12 @@ class EditProductsGroupForm extends UserForm
                     'max' => ProductsGroupConfig::NAME_MAX_LENGTH,
                     'maxMessage' => ProductsGroupErrors::NAME_TOO_LONG
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->repository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::EXPECT_OPTION => $options['expect'],
-                    UniqueForUser::MESSAGE_OPTION => ProductsGroupErrors::NAME_IN_USE
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    ProductsGroupErrors::NAME_IN_USE,
+                    $this->repository,
+                    expect: $options['expect']
+                )
             ]
         ])
             ->add('note', Wysiwyg::class, [

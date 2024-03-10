@@ -37,15 +37,20 @@ class EditViewData extends ViewData
         );
         $mainPhoto = $product->getMainPhoto()?->getId();
         $photos = array_map(
-            static fn(Photo $photo): array => PhotoTransformer::toArray($photo, $photo->getId() === $mainPhoto, true),
+            static fn(Photo $photo): array => PhotoTransformer::toArray(
+                $photo,
+                $photo->getId() === $mainPhoto,
+                true
+            ),
             $product->getPhotos()->toArray()
         );
         foreach ($product->getGroups() as $group) {
             foreach ($group->getPhotos() as $photo) {
-                $photos[] = PhotoTransformer::toArray($photo, $photo->getId() === $mainPhoto, false);
+                $photos[] = PhotoTransformer::toArray($photo, $photo->getId() === $mainPhoto);
             }
         }
         $this->options[ViewParameters::PHOTOS] = $photos;
+
         return $this;
     }
 

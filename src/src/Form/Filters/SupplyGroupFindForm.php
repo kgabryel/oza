@@ -8,19 +8,19 @@ use App\Entity\ProductsGroup;
 use App\Form\UserForm;
 use App\Model\Filter\SupplyGroup;
 use App\Repository\ProductsGroupRepository;
+use App\Services\UserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyGroupFindForm extends UserForm
 {
     private array $productsGroups;
 
-    public function __construct(TokenStorageInterface $tokenStorage, ProductsGroupRepository $productsGroupRepository)
+    public function __construct(UserService $userService, ProductsGroupRepository $productsGroupRepository)
     {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->productsGroups = $productsGroupRepository->findWithSupply($this->user);
     }
 

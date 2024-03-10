@@ -8,5 +8,5 @@ interface Shopping
 {
     public function getShop(): Shop;
 
-    public function toDto();
+    public function toDto(): mixed;
 }

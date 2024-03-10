@@ -7,8 +7,8 @@ use App\Entity\ProductsGroup;
 use App\Entity\Shop;
 use App\Entity\Shopping;
 use App\Repository\ShoppingRepository;
+use App\Services\UserService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductsGroupsPricesService
 {
@@ -25,12 +25,12 @@ class ProductsGroupsPricesService
     public function __construct(
         SessionInterface $session,
         ShoppingRepository $shoppingRepository,
-        TokenStorageInterface $tokenStorage
+        UserService $userService
     ) {
         $this->shopping = [];
         $this->usedShops = [];
         $this->shoppingRepository = $shoppingRepository;
-        $user = $tokenStorage->getToken()->getUser();
+        $user = $userService->getUser();
         $this->shops = $user->getShops()->toArray();
         $this->newShoppingDays = $session->get(Settings::NEW_SHOPPING_DAYS);
     }

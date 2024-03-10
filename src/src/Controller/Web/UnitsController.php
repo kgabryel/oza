@@ -43,12 +43,12 @@ final class UnitsController extends BaseController
             return new Response(null, Response::HTTP_FORBIDDEN);
         }
         $unit = $unitService->getUnit();
-        $editViewData->addEntity($unit);
         $form = $this->createForm(EditUnitForm::class, EditUnit::fromEntity($unit), [
             'method' => Request::METHOD_PUT,
             'expect' => $unit->getId()
         ]);
-        $editViewData->addForm($form);
+        $editViewData->addForm($form)
+            ->addEntity($unit);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }
@@ -77,8 +77,8 @@ final class UnitsController extends BaseController
         if ($unitService->update($form, $this->request)) {
             return $this->redirectBack();
         }
-        $editViewData->addEntity($unit);
-        $editViewData->addForm($form);
+        $editViewData->addEntity($unit)
+            ->addForm($form);
 
         return $this->render(self::EDIT_TEMPLATE, $editViewData->getOptions());
     }

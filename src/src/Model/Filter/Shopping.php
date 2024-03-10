@@ -31,8 +31,10 @@ class Shopping
 
     public function setDateFrom(?string $dateFrom): void
     {
-        if (!strtotime($dateFrom)) {
-            $dateFrom = null;
+        if ($dateFrom === null || !strtotime($dateFrom)) {
+            $this->dateFrom = null;
+
+            return;
         }
         $this->dateFrom = new DateTime($dateFrom);
     }
@@ -44,8 +46,10 @@ class Shopping
 
     public function setDateTo(?string $dateTo): void
     {
-        if (!strtotime($dateTo)) {
-            $dateTo = null;
+        if ($dateTo === null || !strtotime($dateTo)) {
+            $this->dateTo = null;
+
+            return;
         }
         $this->dateTo = new DateTime($dateTo);
     }

@@ -7,11 +7,11 @@ use App\Controller\Web\BaseController;
 use App\Entity\Brand;
 use App\Model\Form\Brand as BrandModel;
 use App\Repository\BrandRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BrandService extends EntityService
 {
@@ -21,10 +21,10 @@ class BrandService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         BrandRepository $brandRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->brandRepository = $brandRepository;
     }
 
@@ -63,8 +63,8 @@ class BrandService extends EntityService
         }
         /** @var BrandModel $data */
         $data = $form->getData();
-        $this->brand->setName($data->getName());
-        $this->brand->setDescription($data->getDescription());
+        $this->brand->setName($data->getName())
+            ->setDescription($data->getDescription());
         $this->saveEntity($this->brand);
         $this->flashBag->add(BaseController::SUCCESS_MESSAGE, BrandsMessages::UPDATE_CORRECT);
 

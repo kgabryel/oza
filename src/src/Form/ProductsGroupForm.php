@@ -10,12 +10,12 @@ use App\Field\Wysiwyg;
 use App\Model\Form\ProductsGroup;
 use App\Repository\ProductsGroupRepository;
 use App\Repository\UnitRepository;
+use App\Services\UserService;
 use App\Validator\UniqueForUser\UniqueForUser;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -28,9 +28,9 @@ class ProductsGroupForm extends UserForm
     public function __construct(
         ProductsGroupRepository $productRepository,
         UnitRepository $unitRepository,
-        TokenStorageInterface $tokenStorage
+        UserService $userService
     ) {
-        parent::__construct($tokenStorage);
+        parent::__construct($userService);
         $this->productRepository = $productRepository;
         $this->units = $unitRepository->findForUser($this->user);
     }
@@ -54,12 +54,11 @@ class ProductsGroupForm extends UserForm
                     'max' => ProductsGroupConfig::NAME_MAX_LENGTH,
                     'maxMessage' => ProductsGroupErrors::NAME_TOO_LONG
                 ]),
-                new UniqueForUser([
-                    UniqueForUser::USER_OPTION => $this->user,
-                    UniqueForUser::REPOSITORY_OPTION => $this->productRepository,
-                    UniqueForUser::COLUMN_NAME_OPTION => 'name',
-                    UniqueForUser::MESSAGE_OPTION => ProductsGroupErrors::NAME_IN_USE
-                ])
+                new UniqueForUser(
+                    $this->user,
+                    ProductsGroupErrors::NAME_IN_USE,
+                    $this->productRepository
+                )
             ]
         ])
             ->add('note', Wysiwyg::class, [

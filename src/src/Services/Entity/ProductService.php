@@ -6,14 +6,14 @@ use App\Config\Message\ProductMessages;
 use App\Controller\Web\BaseController;
 use App\Entity\Product;
 use App\Model\Form\EditProduct;
-use App\Model\Form\Photo;
+use App\Model\Form\MainPhoto;
 use App\Repository\ProductRepository;
+use App\Services\UserService;
 use App\Utils\FormUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductService extends EntityService
 {
@@ -23,10 +23,10 @@ class ProductService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         ProductRepository $productRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->productRepository = $productRepository;
     }
 
@@ -36,10 +36,11 @@ class ProductService extends EntityService
         if (!$form->isSubmitted() || !$form->isValid()) {
             return false;
         }
-        /** @var Photo $data */
+        /** @var MainPhoto $data */
         $data = $form->getData();
         $this->product->setMainPhoto($data->getPhoto());
         $this->saveEntity($this->product);
+
         return true;
     }
 
@@ -103,12 +104,12 @@ class ProductService extends EntityService
         }
         /** @var EditProduct $data */
         $data = $form->getData();
-        $this->product->setName($data->getName());
-        $this->product->setNote($data->getNote());
-        $this->product->setUnit($data->getUnit());
-        $this->product->setBrand($data->getBrand());
-        $this->product->setBarcode($data->getBarcode());
-        $this->product->clearGroups();
+        $this->product->setName($data->getName())
+            ->setNote($data->getNote())
+            ->setUnit($data->getUnit())
+            ->setBrand($data->getBrand())
+            ->setBarcode($data->getBarcode())
+            ->clearGroups();
         foreach ($data->getProductsGroups() as $group) {
             $this->product->addGroup($group);
         }

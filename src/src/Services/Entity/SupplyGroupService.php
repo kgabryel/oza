@@ -6,11 +6,11 @@ use App\Config\Message\SupplyGroupsMessages;
 use App\Controller\Web\BaseController;
 use App\Entity\SupplyGroup;
 use App\Repository\SupplyGroupRepository;
+use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SupplyGroupService extends EntityService
 {
@@ -20,10 +20,10 @@ class SupplyGroupService extends EntityService
     public function __construct(
         FlashBagInterface $flashBag,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
+        UserService $userService,
         SupplyGroupRepository $supplyGroupRepository
     ) {
-        parent::__construct($flashBag, $entityManager, $tokenStorage);
+        parent::__construct($flashBag, $entityManager, $userService);
         $this->supplyGroupRepository = $supplyGroupRepository;
     }
 
